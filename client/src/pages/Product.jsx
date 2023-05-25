@@ -25,10 +25,10 @@ export const Product = () => {
       <h1>PRODUTO</h1>
       <div>
         {products.map((product) => (
-          <div className="product" key={product.product_id}>
+          <div className="product" key={product.id}>
             <ProductCard
-              productName={product.product_name}
-              productDescription={product.product}
+              name={product.product_name}
+              description={product.product_description}
             />
           </div>
         ))}
