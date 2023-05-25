@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
 
-export const Product = () => {
-  const [products, setProducts] = useState([]);
+export const Product = (props) => {
+  const [product, setProduct] = useState({});
+  const { id } = useParams();
 
   useEffect(() => {
-    getProducts();
+    getProductDetail(id);
   }, []);
 
-  const getProducts = async () => {
+  const getProductDetail = async (id) => {
     try {
-      const response = await fetch(`/api/products`, {
+      const response = await fetch(`/api/products/${id}`, {
         method: "GET",
       });
       const data = await response.json();
-      setProducts(data);
+      setProduct(data);
+      console.log(product);
     } catch (err) {
       console.log(err);
     }
@@ -22,17 +25,13 @@ export const Product = () => {
 
   return (
     <div>
-      <h1>PRODUTO</h1>
-      <div>
-        {products.map((product) => (
-          <div className="product" key={product.id}>
-            <ProductCard
-              name={product.product_name}
-              description={product.product_description}
-            />
-          </div>
-        ))}
-      </div>
+      <h4>{product.product_category}</h4>
+      <h2>{product.product_name}</h2>
+      <h3>{product.product_category}</h3>
+      <p>{product.product_description}</p>
+      <p>{product.product_slogan}</p>
+      <p>{product.product_pairing}</p>
+      <Button variant="contained">Adicionar ao carrinho</Button>
     </div>
   );
 };
