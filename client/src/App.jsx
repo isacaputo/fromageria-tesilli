@@ -14,7 +14,6 @@ function App() {
         method: "GET",
       });
       const data = await response.json();
-      console.log(data);
       setProducts(data);
     } catch (err) {
       console.log(err);
@@ -28,7 +27,7 @@ function App() {
       </div>
       <div>
         {products.map((product) => (
-          <div className="productsGallery" key={product.product_id}>
+          <div className="product" key={product.product_id}>
             <div>{product.product_name}</div>
             <div>{product.product_description}</div>
           </div>

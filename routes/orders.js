@@ -2,66 +2,55 @@ var express = require("express");
 var router = express.Router();
 const db = require("../model/helper");
 
-/* GET orders list */
-router.get("/", async function (req, res, next) {
-  try {
-    const result = await db(`SELECT * FROM orders;`);
-    console.log(result);
-    res.send(result.data);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
-  }
-});
-
-/* GET order by id */
-router.get("/:id", async function (req, res, next) {
-  const { id } = req.params;
-  try {
-    const result = await db(`SELECT * FROM orders WHERE id = ${id};`);
-    res.send(result.data[0]);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
 /* INSERT into orders table */
 router.post("/", async function (req, res, next) {
-  const { totalAmount, clientName, clientEmail, clientPhone, clientAddress } =
+  const { clientName, clientEmail, clientPhone, clientAddress, items } =
     req.body;
   try {
-    const items = [
-      {
-        productId: 1,
-        quantity: 2,
-      },
-      {
-        productId: 2,
-        quantity: 2,
-      },
-    ];
-
     const productIds = items.map((value) => value.productId);
 
-    const { data } = await db(
-      `SELECT id, product_whole_price FROM products WHERE id IN (${productIds.join(
+    const productResponse = await db(
+      `SELECT id, product_whole_price, product_half_price FROM products WHERE id IN (${productIds.join(
         ","
       )});`
     );
     let amount = 0;
     items.forEach((item) => {
-      const selected = data.find((p) => p.id === item.productId);
+      const selected = productResponse.data.find(
+        (p) => p.id === item.productId
+      );
       if (selected) {
-        amount += selected.product_whole_price * item.quantity;
+        if (item.quantity % 1 === 0) {
+          amount += selected.product_whole_price * item.quantity;
+        } else {
+          const intQuantity = Math.floor(item.quantity);
+          amount += selected.product_whole_price * intQuantity;
+          amount += selected.product_half_price;
+        }
       }
     });
 
-    console.log(amount);
+    await db(
+      `INSERT INTO orders 
+      (total_amount, client_name, client_email, client_phone, client_address) VALUES 
+      (${amount}, '${clientName}', '${clientEmail}', '${clientPhone}', '${clientAddress}');`
+    );
 
-    // await db(
-    //   `INSERT INTO orders (total_amount, client_name, client_email, client_phone, client_address) VALUES (${totalAmount}, '${clientName}', '${clientEmail}', '${clientPhone}', '${clientAddress}');`
-    // );
-    res.status(201).send("sucesso!");
+    const ordersResponse = await db(
+      "SELECT id FROM orders ORDER BY date DESC LIMIT 1;"
+    );
+
+    const orderId = ordersResponse.data[0].id;
+
+    /* INSERT into order_has_product table */
+    const insertItemsQuery = items.map(
+      (item) =>
+        `INSERT INTO order_has_product (order_id, product_id, quantity) VALUES (${orderId}, ${item.productId}, ${item.quantity});`
+    );
+
+    await db(insertItemsQuery.join(""));
+
+    res.status(200).send("Success!");
   } catch (err) {
     res.status(400).send(err);
   }

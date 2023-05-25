@@ -15,20 +15,28 @@ const con = mysql.createConnection({
 });
 
 const SQL = `
+  DROP TABLE if exists order_has_product;
+  CREATE TABLE order_has_product (
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity FLOAT NOT NULL,
+    PRIMARY KEY (order_id,product_id)
+  );
+
   DROP TABLE if exists products;
   CREATE TABLE products
   (
-      id                   int auto_increment
-      primary key,
-      product_name         varchar(100) null,
-      product_description  varchar(255) null,
-      product_half_price   int          null,
-      product_whole_price  int          null,
-      product_half_weight  int          null,
-      product_whole_weight int          null,
-      product_pairing      varchar(255) null,
-      product_slogan       varchar(400) null,
-      product_category     varchar(255) null
+    id                   int auto_increment
+    primary key,
+    product_name         varchar(100) null,
+    product_description  varchar(255) null,
+    product_half_price   float          null,
+    product_whole_price  float          null,
+    product_half_weight  float          null,
+    product_whole_weight float          null,
+    product_pairing      varchar(255) null,
+    product_slogan       varchar(400) null,
+    product_category     varchar(255) null
   );
 
   INSERT INTO products (product_name, product_description, product_half_price, product_whole_price, product_half_weight, product_whole_weight, product_pairing, product_slogan, product_category) VALUES ('juri', 'Castanha de Cajú e Tâmara', 32, 49, 230, 460, 'Café, licores, vinhos rosés, vinho do Porto, vinhos Jerez, vinhos tintos italianos ou cervejas do tipo Lager.', 'Um queijo com sabor suave.
@@ -57,26 +65,17 @@ const SQL = `
   DROP TABLE if exists orders;
   CREATE TABLE orders
   (
-      id             int auto_increment
-          primary key,
-      date           datetime     null,
-      total_amount   int          null,
-      client_name    varchar(255) null,
-      client_email   varchar(255) null,
-      client_phone   varchar(20)  null,
-      client_address varchar(480) null
-  );
-
-  DROP TABLE if exists order_has_product;
-  CREATE TABLE order_has_product (
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    PRIMARY KEY (order_id,product_id)
+    id             int auto_increment
+    primary key,
+    date           timestamp default (now()) null,
+    total_amount   float        null,
+    client_name    varchar(255) null,
+    client_email   varchar(255) null,
+    client_phone   varchar(20)  null,
+    client_address varchar(480) null
   );
   
   ALTER TABLE order_has_product ADD CONSTRAINT order_has_product_fk0 FOREIGN KEY (order_id) REFERENCES orders(id);
-  
   ALTER TABLE order_has_product ADD CONSTRAINT order_has_product_fk1 FOREIGN KEY (product_id) REFERENCES products(id);
 `;
 

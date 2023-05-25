@@ -41,7 +41,7 @@
   color: #888;
 }
 
-.productsGallery {
+.product {
   display: flex;
   gap: 10;
 }
