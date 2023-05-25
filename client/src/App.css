@@ -42,6 +42,6 @@
 }
 
 .product {
-  display: flex;
+  display: contents;
   gap: 10;
 }
