@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ProductCard from "../components/ProductCard";
 
 export const Product = () => {
   const [products, setProducts] = useState([]);
@@ -25,8 +26,10 @@ export const Product = () => {
       <div>
         {products.map((product) => (
           <div className="product" key={product.product_id}>
-            <h3>{product.product_name.toUpperCase()}</h3>
-            <div>{product.product_description}</div>
+            <ProductCard
+              productName={product.product_name}
+              productDescription={product.product}
+            />
           </div>
         ))}
       </div>
