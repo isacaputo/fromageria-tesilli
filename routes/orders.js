@@ -52,6 +52,7 @@ router.post("/", async function (req, res, next) {
     await db(insertItemsQuery.join(""));
 
     // Generate SMTP service account from ethereal.email
+
     nodemailer.createTestAccount((err, account) => {
       if (err) {
         console.error("Failed to create a testing account");
@@ -82,7 +83,7 @@ router.post("/", async function (req, res, next) {
           // default message fields
 
           // sender info
-          from: "Fromageria Tesilli <isadora.caputo@gmail.com>",
+          from: "Fromageria Tesilli <rosanna.mrsilveira@gmail.com>",
           headers: {
             "X-Laziness-level": 1000, // just an example header, no need to use this
           },
@@ -101,7 +102,7 @@ router.post("/", async function (req, res, next) {
         text: "Hello to myself!",
 
         // HTML body
-        html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
+        html: `<p><b>Hello</b> to myself</p>
         <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
 
         // AMP4EMAIL

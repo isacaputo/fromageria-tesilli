@@ -6,7 +6,6 @@ const db = require("../model/helper");
 router.get("/", async function (req, res, next) {
   try {
     const result = await db(`SELECT * FROM products;`);
-    console.log(result);
     res.send(result.data);
   } catch (err) {
     console.log(err);
