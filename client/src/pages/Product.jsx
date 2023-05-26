@@ -27,10 +27,11 @@ export const Product = (props) => {
     <div>
       <h4>{product.product_category}</h4>
       <h2>{product.product_name}</h2>
-      <h3>{product.product_category}</h3>
       <p>{product.product_description}</p>
       <p>{product.product_slogan}</p>
       <p>{product.product_pairing}</p>
+      <p>{product.product_half_price}</p>
+      <p>{product.product_whole_price}</p>
       <Button variant="contained">Adicionar ao carrinho</Button>
     </div>
   );
