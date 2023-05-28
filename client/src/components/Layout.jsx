@@ -6,11 +6,11 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
 
-export function Layout({ cart, onCartQuantity, setCart }) {
-  const [qtd, setQtd] = useState(onCartQuantity);
+export function Layout({ cart, onDeleteCart }) {
+  const [quantitySelected, setQuantitySelected] = useState();
 
-  const handleDelete = (cartPosition) => {
-    setCart(cart.filter((item, id) => item[id] !== cartPosition));
+  const handleClick = (item) => {
+    onDeleteCart(item);
   };
 
   return (
@@ -36,13 +36,14 @@ export function Layout({ cart, onCartQuantity, setCart }) {
         <div>-----------</div>
         <div>MEU CARRINHO</div>
         <div>
-          {cart.map((product, i) => (
-            <div key={i}>
+          {cart.map((product, index) => (
+            <div key={index}>
               <div>
                 <img />
               </div>
               <div>{product.name.toUpperCase()}</div>
               <div>{product.description}</div>
+              <div>{product.size % 1 === 0 ? "INTEIRO" : "METADE"}</div>
               <div>
                 <Box
                   component="form"
@@ -56,15 +57,15 @@ export function Layout({ cart, onCartQuantity, setCart }) {
                     label="Qtd"
                     type="number"
                     inputProps={{ min: 0 }}
-                    value={qtd}
-                    onChange={(e) => setQtd(e.target.value)}
+                    defaultValue={product.quantity}
+                    onChange={(e) => setQuantitySelected(e.target.value)}
                     variant="filled"
                   />
                 </Box>
               </div>
               <div>
                 <Button
-                  onClick={(id) => handleDelete(id)}
+                  onClick={() => handleClick(index)}
                   variant="outlined"
                   startIcon={<DeleteIcon />}
                 ></Button>

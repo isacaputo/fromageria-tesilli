@@ -21,22 +21,34 @@ function App() {
   console.log(cart);
 
   const handleAddCart = (item) => {
-    // todo: mapear o array atual e se existir o no array algum item com o mesmo productId e mesmo size então, incrementar 1 ou o numero de quantidades que veio
-    cart.map((product) => {
-      if (product.id === item.id && product.size === item.size) {
-        product.quantity += item.quantity;
-      } else {
-        setCart((state) => [...state, item]);
-      }
-    });
+    const sameProductInCart = cart.filter(
+      (productInCart) =>
+        productInCart.id === item.id && productInCart.size === item.size
+    );
+    if (sameProductInCart.length === 0) {
+      setCart((state) => [...state, item]);
+    } else {
+      cart.map((productInCart) => {
+        if (productInCart.id === item.id && productInCart.size === item.size) {
+          productInCart.quantity += item.quantity;
+        }
+      });
+    }
   };
 
-  const handleDeleteFromCart = (product) => {};
+  const handleDeleteCart = (index) => {
+    console.log(index);
+    const cartFiltered = cart.filter((product, i) => i !== index); // bad practice, not re-fetching is having a bad source of truth, if I update the list only in the frontend, things are not syncronized. If my page is showing 10 results and I update the frontend, what happens?
+    setCart(cartFiltered);
+  };
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Layout cart={cart} setCart={setCart} />}>
+        <Route
+          path="/"
+          element={<Layout cart={cart} onDeleteCart={handleDeleteCart} />}
+        >
           <Route path="products" element={<ProductList />} />
           <Route
             path="products/:id"
