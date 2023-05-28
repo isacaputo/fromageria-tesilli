@@ -27,6 +27,7 @@ export const ProductList = () => {
         {products.map((product) => (
           <div className="product-grid" key={product.id}>
             <ProductCard
+              image={product.product_main_image}
               name={product.product_name}
               description={product.product_description}
               id={product.id}

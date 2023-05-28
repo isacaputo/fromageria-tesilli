@@ -29,7 +29,7 @@ function Copyright() {
   );
 }
 
-const steps = ["Shipping address", "Payment details", "Review your order"];
+const steps = ["Endereço de entrega", "Confira o pedido", "Finalize o pedido"];
 
 function getStepContent(step) {
   switch (step) {
@@ -72,7 +72,7 @@ export const Checkout = () => {
       >
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Company name
+            Pedido
           </Typography>
         </Toolbar>
       </AppBar>
@@ -108,7 +108,7 @@ export const Checkout = () => {
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
+                    Voltar
                   </Button>
                 )}
 
