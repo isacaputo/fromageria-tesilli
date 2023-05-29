@@ -16,7 +16,7 @@ export default function ProductCard({ name, description, id, image }) {
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image={"/public/images/cheese_pictures/juri/juri1.jpg"}
+        image={image}
         title={`Image of cheese &{name}`}
       />
       <CardContent>

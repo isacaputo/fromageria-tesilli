@@ -5,12 +5,23 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
+import { Checkout } from "../pages/Checkout";
+import { useNavigate } from "react-router-dom";
+import Cart from "../components/Cart";
 
-export function Layout({ cart, onDeleteCart }) {
+export function Layout({ cart, onDeleteItem, onUpdateQuantity }) {
   const [quantitySelected, setQuantitySelected] = useState();
+  const [productSelected, setProductSelected] = useState();
+  const [subTotal, setSubTotal] = useState();
 
-  const handleClick = (item) => {
-    onDeleteCart(item);
+  const subtotal = cart.reduce(
+    (acc, curr) => acc + curr.price * curr.quantity,
+    0
+  );
+
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/checkout`);
   };
 
   return (
@@ -35,6 +46,7 @@ export function Layout({ cart, onDeleteCart }) {
       <section>
         <div>-----------</div>
         <div>MEU CARRINHO</div>
+        <div>{<Cart />}</div>
         <div>
           {cart.map((product, index) => (
             <div key={index}>
@@ -43,8 +55,13 @@ export function Layout({ cart, onDeleteCart }) {
               </div>
               <div>{product.name.toUpperCase()}</div>
               <div>{product.description}</div>
-              <div>{product.size % 1 === 0 ? "INTEIRO" : "METADE"}</div>
+              <div>{product.size === 1 ? "INTEIRO" : "METADE"}</div>
+              <div>{`R$ ${product.price}`}</div>
               <div>
+                <img src={product.image} title="" />
+              </div>
+              <div>
+                {/* / <img title="" /> form to choose quantity */}
                 <Box
                   component="form"
                   sx={{
@@ -57,23 +74,42 @@ export function Layout({ cart, onDeleteCart }) {
                     label="Qtd"
                     type="number"
                     inputProps={{ min: 0 }}
-                    defaultValue={product.quantity}
-                    onChange={(e) => setQuantitySelected(e.target.value)}
+                    value={product.quantity}
+                    // onChange={(e) => setQuantitySelected(e.target.value)}
                     variant="filled"
                   />
                 </Box>
               </div>
               <div>
+                {/* / <img title="" /> delete from cart button */}
                 <Button
-                  onClick={() => handleClick(index)}
+                  onClick={() => onDeleteItem(index)}
                   variant="outlined"
                   startIcon={<DeleteIcon />}
-                ></Button>
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           ))}
         </div>
       </section>
+      <div>
+        <div>
+          <p>SUBTOTAL</p>
+          <p>{`R$ ${subtotal}`}</p>
+          <p>FRETE</p>
+          <p>A CALCULAR NO CHECKOUT</p>
+          <p>TOTAL</p>
+          <p>{`R$ ${subtotal}`}</p>
+          <p></p>
+        </div>
+      </div>
+      <div>
+        <Button onClick={handleClick} variant="contained">
+          SEGUIR PARA CHECKOUT
+        </Button>
+      </div>
     </div>
   );
 }

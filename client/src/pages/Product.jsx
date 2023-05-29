@@ -8,11 +8,14 @@ import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
+const defaultSize = 1;
+const defaultQuantity = 1;
+
 export const Product = ({ onAddCart }) => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [size, setSize] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState(defaultSize);
+  const [quantity, setQuantity] = useState(defaultQuantity);
 
   useEffect(() => {
     getProductDetail(id);
@@ -31,14 +34,19 @@ export const Product = ({ onAddCart }) => {
   };
 
   const handleClick = () => {
-    onAddCart({
-      name: product.product_name,
-      description: product.product_description,
-      id: product.id,
-      size: size,
-      quantity,
-    });
-    setQuantity(1);
+    if (size) {
+      onAddCart({
+        name: product.product_name,
+        description: product.product_description,
+        id: product.id,
+        image: product.product_main_image,
+        size: size,
+        price:
+          size === 1 ? product.product_whole_price : product.product_half_price,
+        quantity,
+      });
+      setQuantity(defaultQuantity);
+    }
   };
 
   const handleSelection = (event) => {
