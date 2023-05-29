@@ -7,7 +7,12 @@ import { Product } from "./pages/Product";
 import { Checkout } from "./pages/Checkout";
 
 function App() {
+  const [showCart, setShowCart] = useState(false);
   const [cart, setCart] = useState([]);
+
+  const handleCloseCart = () => {
+    setShowCart(false);
+  };
 
   const handleAddCart = (item) => {
     const existingIndexItem = cart.findIndex(
@@ -20,11 +25,19 @@ function App() {
     } else {
       setCart((state) => [...state, item]);
     }
+
+    setShowCart(true);
   };
 
   const handleDeleteItem = (index) => {
-    const cartFiltered = cart.filter((product, i) => i !== index); // bad practice, not re-fetching is having a bad source of truth, if I update the list only in the frontend, things are not syncronized. If my page is showing 10 results and I update the frontend, what happens?
+    const cartFiltered = cart.filter((product, i) => i !== index);
     setCart(cartFiltered);
+  };
+
+  const handleUpdateItem = (index, value) => {
+    const newCart = [...cart];
+    newCart[index].quantity = value;
+    setCart(newCart);
   };
 
   return (
@@ -32,7 +45,15 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<Layout cart={cart} onDeleteItem={handleDeleteItem} />}
+          element={
+            <Layout
+              cart={cart}
+              onDeleteItem={handleDeleteItem}
+              onUpdateQuantity={handleUpdateItem}
+              showCart={showCart}
+              onCloseCart={handleCloseCart}
+            />
+          }
         >
           <Route path="products" element={<ProductList />} />
           <Route

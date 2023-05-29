@@ -34,19 +34,17 @@ export const Product = ({ onAddCart }) => {
   };
 
   const handleClick = () => {
-    if (size) {
-      onAddCart({
-        name: product.product_name,
-        description: product.product_description,
-        id: product.id,
-        image: product.product_main_image,
-        size: size,
-        price:
-          size === 1 ? product.product_whole_price : product.product_half_price,
-        quantity,
-      });
-      setQuantity(defaultQuantity);
-    }
+    onAddCart({
+      name: product.product_name,
+      description: product.product_description,
+      id: product.id,
+      image: product.product_main_image,
+      size: size,
+      price:
+        size === 1 ? product.product_whole_price : product.product_half_price,
+      quantity,
+    });
+    setQuantity(defaultQuantity);
   };
 
   const handleSelection = (event) => {

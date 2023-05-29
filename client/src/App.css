@@ -5,3 +5,14 @@
   row-gap: 20px;
   display: grid;
 }
+
+.cart {
+  position: fixed;
+  width: 200px;
+  right: 0;
+  height: 100vh;
+  top: 0;
+  background-color: aqua;
+  transition: transform 300ms;
+  transform: translateX(0px);
+}
