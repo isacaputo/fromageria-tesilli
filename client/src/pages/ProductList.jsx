@@ -36,25 +36,6 @@ export const ProductList = ({ onAddCart }) => {
     }
   };
 
-  //   return (
-  //     <div>
-  //       <h1>PRODUTO</h1>
-  //       <div>
-  //         {products.map((product) => (
-  //           <div className="product-grid" key={product.id}>
-  //             <ProductCard
-  //               image={product.product_main_image}
-  //               name={product.product_name}
-  //               description={product.product_description}
-  //               id={product.id}
-  //             />
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
   function Copyright() {
     return (
       <Typography variant="body2" color="text.secondary" align="center">

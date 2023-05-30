@@ -19,15 +19,16 @@ const SQL = `
   CREATE TABLE order_has_product (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
+    size FLOAT NOT NULL,
     quantity FLOAT NOT NULL,
-    PRIMARY KEY (order_id,product_id)
+    PRIMARY KEY (order_id,product_id, size)
   );
 
   DROP TABLE if exists products;
   CREATE TABLE products
   (
     id                   int auto_increment
-        primary key,
+    primary key,
     product_name         varchar(100) null,
     product_description  varchar(255) null,
     product_half_price   float        null,
@@ -69,7 +70,7 @@ const SQL = `
     client_name    varchar(255) null,
     client_email   varchar(255) null,
     client_phone   varchar(20)  null,
-    client_address varchar(480) null
+    client_address varchar(255) null
   );
   
   ALTER TABLE order_has_product ADD CONSTRAINT order_has_product_fk0 FOREIGN KEY (order_id) REFERENCES orders(id);

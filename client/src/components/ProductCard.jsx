@@ -15,7 +15,7 @@ export default function ProductCard({ name, id, description, image }) {
   };
 
   return (
-    <Card sx={{ maxWidth: 500, maxWidth: 500 }}>
+    <Card sx={{ maxWidth: 500, maxHeight: 500 }}>
       <CardActionArea>
         <CardMedia
           sx={{ height: 150 }}
@@ -23,20 +23,20 @@ export default function ProductCard({ name, id, description, image }) {
           title={`Image of cheese ${name}`}
           onClick={() => handleClick(id)}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {name.toUpperCase()}
-          </Typography>
-          <Typography variant="p" color="text.secondary" fontSize={14}>
-            {description}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small" onClick={() => handleClick(id)}>
-            Detalhes
-          </Button>
-        </CardActions>
       </CardActionArea>
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {name.toUpperCase()}
+        </Typography>
+        <Typography variant="p" color="text.secondary" fontSize={14}>
+          {description}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => handleClick(id)}>
+          Detalhes
+        </Button>
+      </CardActions>
     </Card>
   );
 }

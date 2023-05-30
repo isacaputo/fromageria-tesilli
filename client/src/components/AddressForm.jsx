@@ -74,9 +74,22 @@ export default function AddressForm({ value, onChange }) {
             name="email"
             label="E-mail"
             fullWidth
-            autoComplete="e-mail"
+            autoComplete="email"
             variant="standard"
             value={value.email}
+            onChange={handleFormChange}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="phone"
+            name="phone"
+            label="Phone"
+            fullWidth
+            autoComplete="phone"
+            variant="standard"
+            value={value.phone}
             onChange={handleFormChange}
           />
         </Grid>
