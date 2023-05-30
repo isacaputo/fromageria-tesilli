@@ -15,6 +15,7 @@ function App() {
   };
 
   const handleAddCart = (item) => {
+    console.log(item);
     const existingIndexItem = cart.findIndex(
       (value) => value.id === item.id && value.size === item.size
     );
@@ -56,7 +57,10 @@ function App() {
             />
           }
         >
-          <Route path="products" element={<ProductList />} />
+          <Route
+            path="products"
+            element={<ProductList onAddCart={handleAddCart} />}
+          />
           <Route
             path="products/:id"
             element={<Product onAddCart={handleAddCart} />}

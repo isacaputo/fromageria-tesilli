@@ -37,7 +37,6 @@ const defaultTheme = createTheme();
 export const Checkout = ({ cart, setShowCart }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [address, setAddress] = useState({
-    name: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -68,8 +67,8 @@ export const Checkout = ({ cart, setShowCart }) => {
   };
 
   const isValidAddress = () => {
-    const objectEntries = Object.entries(address);
-    console.log(objectEntries);
+    const objectValues = Object.values(address);
+    return objectValues.every((input) => input !== "");
   };
 
   return (
@@ -78,7 +77,7 @@ export const Checkout = ({ cart, setShowCart }) => {
       <AppBar
         position="absolute"
         color="default"
-        elevation={0}
+        elevation={1}
         sx={{
           position: "relative",
           borderBottom: (t) => `1px solid ${t.palette.divider}`,

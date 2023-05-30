@@ -6,17 +6,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
 
 export default function Review({ cart, address }) {
-  const products = [];
-  cart.map((product) => {
-    products.push({
-      name: product.name,
-      desc: product.description,
-      tamanho: product.size,
-      preço: `R$ ${product.price}`,
-      quantidade: product.quantity,
-    });
-  });
-
   const subtotal = cart.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
     0
@@ -28,17 +17,15 @@ export default function Review({ cart, address }) {
         Queijos
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
+        {cart.map((product) => (
           <ListItem key={product.price} sx={{ py: 1, px: 0 }}>
             <ListItemText
               primary={product.name.toUpperCase()}
-              secondary={product.desc}
+              secondary={product.description}
             />
-            <ListItemText
-              primary={product.tamanho === 1 ? "INTEIRO" : "METADE"}
-            />
-            <Typography variant="body2">{product.quantidade}</Typography>
-            <Typography variant="body3">{product.preço}</Typography>
+            <ListItemText primary={product.size === 1 ? "Inteiro" : "Metade"} />
+            <Typography variant="body2">{product.quantity}</Typography>
+            <Typography variant="body3">{`R$ ${product.price}`}</Typography>
           </ListItem>
         ))}
 
@@ -64,7 +51,7 @@ export default function Review({ cart, address }) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Endereço de Entrega
+            Dados para Entrega
           </Typography>
           <Typography gutterBottom>
             {`${address.firstName} ${address.lastName}`}
