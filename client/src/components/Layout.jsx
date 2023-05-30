@@ -17,6 +17,7 @@ import {
   Link,
   Button,
   AppBar,
+  Container,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -60,13 +61,18 @@ export function Layout({
     <>
       <AppBar position="static" elevation={0}>
         <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            Fromageria Tesilli
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
+          >
+            FROMAGERIA TESILLI
           </Typography>
           <nav>
             <Link
               variant="button"
-              color="text.primary"
+              color="neutral.contrastText"
               sx={{ my: 1, mx: 1.5 }}
               href="#"
               onClick={() => navigate("/")}
@@ -75,7 +81,7 @@ export function Layout({
             </Link>
             <Link
               variant="button"
-              color="text.primary"
+              color="neutral.contrastText"
               sx={{ my: 1, mx: 1.5 }}
               href="#"
               onClick={() => navigate("/products")}
@@ -90,7 +96,6 @@ export function Layout({
           </nav>
         </Toolbar>
       </AppBar>
-
       <Drawer anchor={"right"} open={showCart} onClose={onCloseCart}>
         <Box sx={{ width: 650, padding: 2 }} role="presentation">
           <List disablePadding>

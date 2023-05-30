@@ -70,6 +70,7 @@ export const Product = ({ onAddCart }) => {
         sx={{
           display: "flex",
           alignItems: "flex-start",
+          justifyContent: "center",
           gap: "20px",
           mt: "30px",
         }}

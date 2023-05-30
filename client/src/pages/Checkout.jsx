@@ -16,19 +16,6 @@ import Review from "../components/Review";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Fomageria Tesilli
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const steps = ["Dados do Cliente", "Revise e Finalize o Pedido"];
 
 export const Checkout = ({ cart, onSuccess }) => {
@@ -198,7 +185,6 @@ export const Checkout = ({ cart, onSuccess }) => {
             )}
           </Paper>
         )}
-        <Copyright />
       </Container>
     </>
   );

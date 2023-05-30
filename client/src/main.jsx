@@ -15,6 +15,12 @@ const defaultTheme = createTheme({
     primary: {
       main: "#549470",
     },
+    secondary: {
+      main: "#F5CB8B",
+    },
+    neutral: {
+      contrastText: "#FFFFFF",
+    },
   },
 });
 

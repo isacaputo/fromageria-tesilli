@@ -31,16 +31,16 @@ export const ProductList = ({ onAddCart }) => {
         sx={{
           bgcolor: "background.paper",
           pt: 8,
-          pb: 6,
         }}
       >
-        <Container maxWidth="md">
+        <Container sx={{ justifyContent: "center" }} maxWidth="md">
           <Typography
             component="h1"
             variant="h2"
             align="center"
             color="text.primary"
             gutterBottom
+            sx={{ fontFamily: "Oooh Baby", fontSize: 80 }}
           >
             Fromageria Tesilli
           </Typography>
@@ -49,10 +49,11 @@ export const ProductList = ({ onAddCart }) => {
             align="center"
             color="text.secondary"
             paragraph
+            sx={{ justifyContent: "center" }}
           >
-            Produzimos queijos artesanais maturados com massa semi-cozida.
-            Nossos queijos são cuidadosamente elaborados, combinando
-            ingredientes deliciosos com pinceladas de criatividade.
+            Produzimos <strong>queijos artesanais maturados</strong>{" "}
+            cuidadosamente elaborados, combinando ingredientes deliciosos com
+            pinceladas de criatividade.
           </Typography>
           <Stack
             sx={{ pt: 4 }}
