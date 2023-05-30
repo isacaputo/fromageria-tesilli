@@ -1,20 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { Box } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import {
+  Badge,
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  TextField,
+  Toolbar,
+  Link,
+  Button,
+  AppBar,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Stack from "@mui/material/Stack";
-import { Checkout } from "../pages/Checkout";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useNavigate } from "react-router-dom";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
+import { formatCurrency } from "../helper";
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href={location.origin}>
+        Fromageria Tesilli
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
 export function Layout({
   cart,
@@ -22,11 +42,9 @@ export function Layout({
   onCloseCart,
   onDeleteItem,
   onUpdateQuantity,
-  setShowCart,
+  onOpenCart,
 }) {
-  const [productSelected, setProductSelected] = useState();
   const navigate = useNavigate();
-  console.log(cart);
 
   const subtotal = cart.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
@@ -38,214 +56,130 @@ export function Layout({
     onCloseCart();
   };
 
-  const renderList = () => {
-    console.log("render list");
-
-    return (
-      <Box sx={{ width: 650, padding: 4 }} role="presentation">
-        <List>
-          {cart.map((product, index) => (
-            <div key={index}>
-              <br />
-              <Grid item xs={12} md={6}>
-                <CardActionArea component="a" href="#">
-                  <Card
-                    sx={{ display: "flex", maxWidth: 1000, maxHeight: 180 }}
-                  >
-                    <CardContent sx={{ flex: 1 }}>
-                      <Typography component="h2" variant="h5">
-                        {product.name}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {product.description}
-                      </Typography>
-                      <Typography variant="subtitle1" paragraph>
-                        {product.size === 1 ? "Inteiro" : "Metade"}
-                      </Typography>
-                      <Box
-                        component="form"
-                        sx={{
-                          "& > :not(style)": { m: 1, width: "10ch" },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          label="Qtd"
-                          type="number"
-                          inputProps={{ min: 0 }}
-                          value={product.quantity}
-                          onChange={(e) =>
-                            onUpdateQuantity(index, e.target.value)
-                          }
-                          variant="filled"
-                        />
-                        <Button
-                          onClick={() => onDeleteItem(index)}
-                          variant="outlined"
-                          startIcon={<DeleteIcon />}
-                        >
-                          Delete
-                        </Button>
-                      </Box>
-                    </CardContent>
-
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 200, display: { xs: "none", sm: "block" } }}
-                      image={product.image}
-                      alt={product.name}
-                    />
-                  </Card>
-                </CardActionArea>
-              </Grid>
-            </div>
-          ))}
-        </List>
-        <List>
-          <div>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" color="text.secondary">
-                Subtotal
-              </Typography>
-              <Typography variant="h5" color="text.secondary">
-                {`R$ ${subtotal}`}
-              </Typography>
-              <Typography variant="h6" color="text.secondary">
-                Frete a combinar
-              </Typography>
-              <Typography variant="h6" color="text.secondary">
-                Total
-              </Typography>
-              <Typography variant="h5" color="text.secondary">
-                {`R$ ${subtotal}`}
-              </Typography>
-            </Grid>
-          </div>
-          <div>
-            <Button onClick={handleClick} variant="contained">
-              SEGUIR PARA CHECKOUT
-            </Button>
-          </div>
-        </List>
-      </Box>
-    );
-  };
-
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/products">Products</Link>
-          </li>
-        </ul>
-      </nav>
+    <>
+      <AppBar position="static" elevation={0}>
+        <Toolbar sx={{ flexWrap: "wrap" }}>
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+            Fromageria Tesilli
+          </Typography>
+          <nav>
+            <Link
+              variant="button"
+              color="text.primary"
+              sx={{ my: 1, mx: 1.5 }}
+              href="#"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Link>
+            <Link
+              variant="button"
+              color="text.primary"
+              sx={{ my: 1, mx: 1.5 }}
+              href="#"
+              onClick={() => navigate("/products")}
+            >
+              Products
+            </Link>
+            <IconButton aria-label="carrinho" onClick={onOpenCart}>
+              <Badge color="secondary" badgeContent={cart.length}>
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          </nav>
+        </Toolbar>
+      </AppBar>
 
-      <Outlet />
-
-      <div>
-        {
-          <Drawer
-            sx={{ width: "100%" }}
-            anchor={"right"}
-            open={showCart}
-            onClose={onCloseCart}
-          >
-            {renderList()}
-          </Drawer>
-        }
-      </div>
-    </div>
-  );
-
-  return (
-    <div>
-      <h1>FROMAGERIA TESILLI</h1>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/products">Products</Link>
-          </li>
-          <li>
-            <Link to="/checkout">Checkout</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <Outlet />
-
-      <section className="cart">
-        <div>-----------</div>
-        <div>MEU CARRINHO</div>
-        {/* <div>{<Cart />}</div> */}
-        <div>
-          {cart.map((product, index) => (
-            <div key={index}>
-              <div>
-                <img />
-              </div>
-              <div>{product.name.toUpperCase()}</div>
-              <div>{product.description}</div>
-              <div>{product.size === 1 ? "INTEIRO" : "METADE"}</div>
-              <div>{`R$ ${product.price}`}</div>
-              <div>
-                <img src={product.image} title="" />
-              </div>
-              <div>
-                <Box
-                  component="form"
-                  sx={{
-                    "& > :not(style)": { m: 1, width: "10ch" },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    label="Qtd"
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    value={product.quantity}
-                    onChange={(e) => onUpdateQuantity(index, e.target.value)}
-                    variant="filled"
-                  />
-                </Box>
-              </div>
-              <div>
-                {/* / <img title="" /> delete from cart button */}
-                <Button
-                  onClick={() => onDeleteItem(index)}
+      <Drawer anchor={"right"} open={showCart} onClose={onCloseCart}>
+        <Box sx={{ width: 650, padding: 2 }} role="presentation">
+          <List disablePadding>
+            {cart.map((product, index) => (
+              <ListItem key={index} sx={{ pl: 0, pr: 0 }}>
+                <Card
+                  sx={{ display: "flex", maxHeight: 180, width: "100%" }}
                   variant="outlined"
-                  startIcon={<DeleteIcon />}
                 >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div>
-            <p>SUBTOTAL</p>
-            <p>{`R$ ${subtotal}`}</p>
-            <p>FRETE A CALCULAR NO CHECKOUT</p>
-            <p>TOTAL</p>
-            <p>{`R$ ${subtotal}`}</p>
-            <p></p>
-          </div>
-        </div>
-        <div>
-          <Button onClick={handleClick} variant="contained">
+                  <CardContent sx={{ flex: 1 }}>
+                    <Typography component="h2" variant="h5">
+                      {product.name}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary">
+                      {product.description}
+                    </Typography>
+                    <Typography variant="subtitle1" paragraph>
+                      {product.size === 1 ? "Inteiro" : "Metade"}
+                    </Typography>
+                    <Box sx={{ display: "flex", gap: "6px" }}>
+                      <TextField
+                        label="Qtd"
+                        type="number"
+                        inputProps={{ min: 1 }}
+                        size="small"
+                        value={product.quantity}
+                        sx={{ width: "70px" }}
+                        onChange={(e) =>
+                          onUpdateQuantity(index, e.target.value)
+                        }
+                      />
+                      <Button
+                        onClick={() => onDeleteItem(index)}
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  </CardContent>
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 200, display: { xs: "none", sm: "block" } }}
+                    image={product.image}
+                    alt={product.name}
+                  />
+                </Card>
+              </ListItem>
+            ))}
+
+            <ListItem sx={{ py: 1, px: 0 }}>
+              <ListItemText primary="Subtotal" />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {formatCurrency(subtotal)}
+              </Typography>
+            </ListItem>
+            <ListItem sx={{ py: 1, px: 0 }}>
+              <ListItemText primary="Frete" />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {`a combinar`}
+              </Typography>
+            </ListItem>
+            <ListItem sx={{ py: 1, px: 0 }}>
+              <ListItemText primary="Total" />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {formatCurrency(subtotal)}
+              </Typography>
+            </ListItem>
+          </List>
+
+          <br />
+          <Button
+            onClick={handleClick}
+            variant="contained"
+            disableElevation
+            disabled={!cart.length}
+          >
             SEGUIR PARA CHECKOUT
           </Button>
-        </div>
-      </section>
-    </div>
+        </Box>
+      </Drawer>
+
+      <Outlet />
+      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+        <Typography variant="h6" align="center" gutterBottom>
+          Fromageria Tesilli
+        </Typography>
+        <Copyright />
+      </Box>
+    </>
   );
 }

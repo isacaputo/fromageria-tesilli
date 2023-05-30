@@ -6,37 +6,49 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { CardActionArea } from "@mui/material";
+import { CardActionArea, Box } from "@mui/material";
+import { formatCurrency } from "../helper";
 
-export default function ProductCard({ name, id, description, image }) {
+export default function ProductCard({ name, id, description, image, price }) {
   const navigate = useNavigate();
   const handleClick = (id) => {
     navigate(`/products/${id}`);
   };
 
   return (
-    <Card sx={{ maxWidth: 500, maxHeight: 500 }}>
-      <CardActionArea>
+    <Card>
+      <CardActionArea onClick={() => handleClick(id)}>
         <CardMedia
-          sx={{ height: 150 }}
+          sx={{ height: 210 }}
           image={image}
           title={`Image of cheese ${name}`}
-          onClick={() => handleClick(id)}
         />
-      </CardActionArea>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {name.toUpperCase()}
-        </Typography>
-        <Typography variant="p" color="text.secondary" fontSize={14}>
-          {description}
-        </Typography>
-      </CardContent>
-      <CardActions>
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: "4px",
+            }}
+          >
+            <Typography variant="h6" component="div">
+              {name}
+            </Typography>
+            <Typography>
+              <strong>{formatCurrency(price)}</strong>
+            </Typography>
+          </Box>
+          <Typography variant="p" color="text.secondary" fontSize={14}>
+            {description}
+          </Typography>
+        </CardContent>
+        {/* <CardActions>
         <Button size="small" onClick={() => handleClick(id)}>
-          Detalhes
+        Detalhes
         </Button>
-      </CardActions>
+      </CardActions> */}
+      </CardActionArea>
     </Card>
   );
 }

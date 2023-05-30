@@ -57,7 +57,7 @@ function App() {
               onUpdateQuantity={handleUpdateItem}
               showCart={showCart}
               onCloseCart={handleCloseCart}
-              setShowCart={setShowCart}
+              onOpenCart={() => setShowCart(true)}
             />
           }
         >

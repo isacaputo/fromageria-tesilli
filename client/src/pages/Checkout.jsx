@@ -150,12 +150,16 @@ export const Checkout = ({ cart, onSuccess }) => {
                 <Typography variant="h5" gutterBottom>
                   Recebemos o seu pedido!
                 </Typography>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" gutterBottom>
                   O número do seu pedido é: #{orderId}. Te enviamos um e-mail
                   com a confirmação. Em breve, entraremos em contato para
                   detalhamento da entrega e frete. Até mais!
                 </Typography>
-                <Button onClick={() => navigate(`/products`)}>
+                <br />
+                <Button
+                  onClick={() => navigate(`/products`)}
+                  variant="outlined"
+                >
                   Ir para cardápio de queijos
                 </Button>
               </>
