@@ -64,8 +64,10 @@ router.post("/", async function (req, res, next) {
       from: "Fromageria Tesilli <isadora.caputo@gmail.com>",
       to: `${clientName} <${clientEmail}>`,
       subject: "Fromageria Tesilli: Recebemos o seu pedido!",
-      html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
-      <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
+      html: `<h2><b>Olá ${clientName}!</b></h2>
+      <p>Estamos muito felizes em receber o seu pedido. Para que possa acompanhar o seu andamento, o número é: <b>${orderId}</b></p>
+      <p>Em breve, entraremos em contato para detalhamento do frete e entrega.</p>
+      <p>Até mais!</p>`,
     };
 
     const info = await transporter.sendMail(message);

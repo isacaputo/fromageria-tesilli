@@ -19,7 +19,7 @@ export function Home() {
         backgroundImage: `url("/images/home.png")`,
         display: "flex",
         alignItems: "center",
-        height: 700,
+        height: 750,
       }}
     >
       <img style={{ display: "none" }} src="/images/home.png" />

@@ -108,15 +108,21 @@ export const Checkout = ({ cart, onSuccess }) => {
           borderBottom: (t) => `1px solid ${t.palette.divider}`,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: "center" }}>
           <Typography variant="h6" color="inherit" noWrap>
             Detalhes do Pedido
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+      <Container
+        component="main"
+        maxWidth="sm"
+        sx={{ mb: 4, justifyContent: "center" }}
+      >
         {cart.length === 0 && success === false ? (
-          <div>seu carrinho está vazio</div>
+          <Container>
+            <Typography>Seu carrinho está vazio!</Typography>
+          </Container>
         ) : (
           <Paper
             variant="outlined"
@@ -138,9 +144,11 @@ export const Checkout = ({ cart, onSuccess }) => {
                   Recebemos o seu pedido!
                 </Typography>
                 <Typography variant="subtitle1" gutterBottom>
-                  O número do seu pedido é: #{orderId}. Te enviamos um e-mail
-                  com a confirmação. Em breve, entraremos em contato para
-                  detalhamento da entrega e frete. Até mais!
+                  O número do seu pedido é: #{orderId}. Agradecemos por escolher
+                  os nossos queijos para dar ainda mais sabor à sua vida!
+                  Acabamos de te enviar um e-mail com a confirmação do pedido.
+                  Em breve, entraremos em contato para detalhamento da entrega e
+                  frete. Até mais! ;)
                 </Typography>
                 <br />
                 <Button

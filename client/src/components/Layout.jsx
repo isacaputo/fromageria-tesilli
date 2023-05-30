@@ -145,7 +145,7 @@ export function Layout({
                 </Card>
               </ListItem>
             ))}
-
+            <hr />
             <ListItem sx={{ py: 1, px: 0 }}>
               <ListItemText primary="Subtotal" />
               <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
