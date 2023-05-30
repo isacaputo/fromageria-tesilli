@@ -14,6 +14,10 @@ function App() {
     setShowCart(false);
   };
 
+  const handleCheckoutSuccess = () => {
+    setCart([]);
+  };
+
   const handleAddCart = (item) => {
     console.log(item);
     const existingIndexItem = cart.findIndex(
@@ -67,7 +71,13 @@ function App() {
           />
           <Route
             path="checkout"
-            element={<Checkout cart={cart} showCart={showCart} />}
+            element={
+              <Checkout
+                cart={cart}
+                showCart={showCart}
+                onSuccess={handleCheckoutSuccess}
+              />
+            }
           />
         </Route>
       </Routes>

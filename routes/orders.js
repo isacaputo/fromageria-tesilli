@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const db = require("../model/helper");
 const nodemailer = require("nodemailer");
+const { transporter } = require("../nodemailer/message_transporter");
 
 /* GET from orders table */
 router.get("/", async function (req, res, next) {
@@ -58,65 +59,21 @@ router.post("/", async function (req, res, next) {
     );
 
     await db(insertItemsQuery.join(""));
+
+    let message = {
+      from: "Fromageria Tesilli <isadora.caputo@gmail.com>",
+      to: `${clientName} <${clientEmail}>`,
+      subject: "Fromageria Tesilli: Recebemos o seu pedido!",
+      html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
+      <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
+    };
+
+    const info = await transporter.sendMail(message);
+
     res.status(200).send({ orderId: orderId });
   } catch (err) {
     res.status(400).send(err);
   }
-
-  nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: "isadora.caputo@gmail.com",
-      pass: "ofoa kvtz drdo bldu",
-    },
-  });
-
-  // Message object
-  let message = {
-    from: "Fromageria Tesilli <isadora.caputo@gmail.com>",
-    to: "Isadora Caputo <isadora.caputo@gmail.com>",
-
-    // Subject of the message
-    subject: "Recebemos o seu pedido!" + Date.now(),
-
-    // plaintext body
-    text: "Hello to myself!",
-
-    // HTML body
-    html: `<p><b>Hello</b> to myself <img src="cid:note@example.com"/></p>
-        <p>Here's a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@example.com"/></p>`,
-
-    // AMP4EMAIL
-    amp: `<!doctype html>
-        <html ⚡4email>
-          <head>
-            <meta charset="utf-8">
-            <style amp4email-boilerplate>body{visibility:hidden}</style>
-            <script async src="https://cdn.ampproject.org/v0.js"></script>
-            <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
-          </head>
-          <body>
-            <p><b>Hello</b> to myself <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
-            <p>No embedded image attachments in AMP, so here's a linked nyan cat instead:<br/>
-              <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
-          </body>
-        </html>`,
-  };
-
-  transporter.sendMail(message, (error) => {
-    if (error) {
-      console.log("Error occurred");
-      console.log(error.message);
-      return process.exit(1);
-    }
-
-    console.log("Message sent successfully!");
-
-    // only needed when using pooled connections
-    transporter.close();
-  });
 });
 
 module.exports = router;

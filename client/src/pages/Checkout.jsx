@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import AddressForm from "../components/AddressForm";
 import Review from "../components/Review";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -30,9 +31,12 @@ function Copyright() {
 
 const steps = ["Dados do Cliente", "Revise e Finalize o Pedido"];
 
-export const Checkout = ({ cart }) => {
+export const Checkout = ({ cart, onSuccess }) => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
-  const [orderNumber, setOrderNumber] = useState(0);
+  const [orderId, setOrderId] = useState();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [orderDetails, setOrderDetails] = useState({
     firstName: "",
     lastName: "",
@@ -44,11 +48,11 @@ export const Checkout = ({ cart }) => {
     zip: "",
   });
 
-  const [orderId, setOrderId] = useState();
-  const [loading, setLoading] = useState(false);
-
-  const saveOrder = async (cart, orderDetails) => {
+  const saveOrder = async () => {
     try {
+      setLoading(true);
+      const { firstName, lastName, email, phone, address, city, state, zip } =
+        orderDetails;
       const response = await fetch(`/api/orders`, {
         method: "POST",
         headers: {
@@ -62,36 +66,27 @@ export const Checkout = ({ cart }) => {
               quantity,
             };
           }),
-          clientName: `${orderDetails.firstName} ${orderDetails.lastName}`,
-          clientEmail: orderDetails.email,
-          clientPhone: orderDetails.phone,
-          clientAddress: `${orderDetails.address}, ${orderDetails.city}, ${orderDetails.state}, ${orderDetails.zip}`,
+          clientName: `${firstName} ${lastName}`,
+          clientEmail: email,
+          clientPhone: phone,
+          clientAddress: `${address}, ${city}, ${state}, ${zip}`,
         }),
       });
       const data = await response.json();
-      return data;
+      setOrderId(data.orderId);
+      setSuccess(true);
+      onSuccess();
+      setLoading(false);
+      setActiveStep(activeStep + 1);
     } catch (err) {
       console.log(err);
       // set error
-      // set loading
     }
   };
 
   const handleNext = () => {
     if (activeStep === 1) {
-      setLoading(true);
-
-      saveOrder(cart, orderDetails)
-        .then((data) => {
-          setLoading(false);
-          setOrderId(data.orderId);
-        })
-        .catch((err) => {
-          setLoading(false);
-          // set error message
-        });
-
-      setActiveStep(activeStep + 1);
+      saveOrder();
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -133,7 +128,7 @@ export const Checkout = ({ cart }) => {
         </Toolbar>
       </AppBar>
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-        {cart.length === 0 ? (
+        {cart.length === 0 && success === false ? (
           <div>seu carrinho está vazio</div>
         ) : (
           <Paper
@@ -153,13 +148,16 @@ export const Checkout = ({ cart }) => {
             {activeStep === steps.length ? (
               <>
                 <Typography variant="h5" gutterBottom>
-                  Agradecemos o seu pedido!
+                  Recebemos o seu pedido!
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #{orderId}. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
+                  O número do seu pedido é: #{orderId}. Te enviamos um e-mail
+                  com a confirmação. Em breve, entraremos em contato para
+                  detalhamento da entrega e frete. Até mais!
                 </Typography>
+                <Button onClick={() => navigate(`/products`)}>
+                  Ir para cardápio de queijos
+                </Button>
               </>
             ) : (
               <>
