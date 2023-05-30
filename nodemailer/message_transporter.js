@@ -14,7 +14,15 @@ nodemailer.createTestAccount((err, account) => {
 
   // NB! Store the account object values somewhere if you want
   // to re-use the same account for future mail deliveries
-
+  nodemailer.createTransport({
+    host: "smtp.example.com",
+    port: 587,
+    secure: false, // upgrade later with STARTTLS
+    auth: {
+      user: "username",
+      pass: "password",
+    },
+  });
   // Create a SMTP transporter object
   let transporter = nodemailer.createTransport(
     {

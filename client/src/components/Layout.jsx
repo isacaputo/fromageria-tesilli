@@ -17,9 +17,9 @@ export function Layout({
   onCloseCart,
   onDeleteItem,
   onUpdateQuantity,
+  setShowCart,
 }) {
   const [productSelected, setProductSelected] = useState();
-  const [subTotal, setSubTotal] = useState();
   const navigate = useNavigate();
 
   const subtotal = cart.reduce(

@@ -5,83 +5,75 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
 
-const products = [
-  {
-    name: "Product 1",
-    desc: "A nice thing",
-    price: "$9.99",
-  },
-  {
-    name: "Product 2",
-    desc: "Another thing",
-    price: "$3.45",
-  },
-  {
-    name: "Product 3",
-    desc: "Something else",
-    price: "$6.51",
-  },
-  {
-    name: "Product 4",
-    desc: "Best thing of all",
-    price: "$14.11",
-  },
-  { name: "Shipping", desc: "", price: "Free" },
-];
+export default function Review({ cart, address }) {
+  const products = [];
+  cart.map((product) => {
+    products.push({
+      name: product.name,
+      desc: product.description,
+      tamanho: product.size,
+      preço: `R$ ${product.price}`,
+      quantidade: product.quantity,
+    });
+  });
 
-const addresses = ["1 MUI Drive", "Reactville", "Anytown", "99999", "USA"];
-const payments = [
-  { name: "Card type", detail: "Visa" },
-  { name: "Card holder", detail: "Mr John Smith" },
-  { name: "Card number", detail: "xxxx-xxxx-xxxx-1234" },
-  { name: "Expiry date", detail: "04/2024" },
-];
+  const subtotal = cart.reduce(
+    (acc, curr) => acc + curr.price * curr.quantity,
+    0
+  );
 
-export default function Review() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Order summary
+        Queijos
       </Typography>
       <List disablePadding>
         {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+          <ListItem key={product.price} sx={{ py: 1, px: 0 }}>
+            <ListItemText
+              primary={product.name.toUpperCase()}
+              secondary={product.desc}
+            />
+            <ListItemText
+              primary={product.tamanho === 1 ? "INTEIRO" : "METADE"}
+            />
+            <Typography variant="body2">{product.quantidade}</Typography>
+            <Typography variant="body3">{product.preço}</Typography>
           </ListItem>
         ))}
 
         <ListItem sx={{ py: 1, px: 0 }}>
+          <ListItemText primary="Subtotal" />
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            {`R$ ${subtotal}`}
+          </Typography>
+        </ListItem>
+        <ListItem sx={{ py: 1, px: 0 }}>
+          <ListItemText primary="Frete" />
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            {`a combinar`}
+          </Typography>
+        </ListItem>
+        <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
+            {`R$ ${subtotal}`}
           </Typography>
         </ListItem>
       </List>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Shipping
+            Endereço de Entrega
           </Typography>
-          <Typography gutterBottom>John Smith</Typography>
-          <Typography gutterBottom>{addresses.join(", ")}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Payment details
+          <Typography gutterBottom>
+            {`${address.firstName} ${address.lastName}`}
           </Typography>
-          <Grid container>
-            {payments.map((payment) => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
+          <Typography gutterBottom>{address.email}</Typography>
+          <Typography gutterBottom>{address.address}</Typography>
+          <Typography gutterBottom>{address.city}</Typography>
+          <Typography gutterBottom>{address.state}</Typography>
+          <Typography gutterBottom>{address.zip}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

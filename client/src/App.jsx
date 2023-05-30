@@ -52,6 +52,7 @@ function App() {
               onUpdateQuantity={handleUpdateItem}
               showCart={showCart}
               onCloseCart={handleCloseCart}
+              setShowCart={setShowCart}
             />
           }
         >
@@ -60,7 +61,10 @@ function App() {
             path="products/:id"
             element={<Product onAddCart={handleAddCart} />}
           />
-          <Route path="checkout" element={<Checkout />} />
+          <Route
+            path="checkout"
+            element={<Checkout cart={cart} showCart={showCart} />}
+          />
         </Route>
       </Routes>
     </div>

@@ -16,6 +16,7 @@ export const Product = ({ onAddCart }) => {
   const [product, setProduct] = useState({});
   const [size, setSize] = useState(defaultSize);
   const [quantity, setQuantity] = useState(defaultQuantity);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getProductDetail(id);
@@ -51,10 +52,26 @@ export const Product = ({ onAddCart }) => {
     setSize(event.target.value);
   };
 
+  const handleGoBack = () => {
+    navigate(`/products`);
+  };
+
   return (
     <div>
       <h4>{product.product_category}</h4>
       <h2>{product.product_name}</h2>
+      <div>
+        <img
+          src={product.product_main_image}
+          title={`Image of whole cheese ${product.product_name}`}
+        />
+      </div>
+      <div>
+        <img
+          src={product.product_extra_image}
+          title={`Image of half cheese ${product.product_name}`}
+        />
+      </div>
       <p>{product.product_description}</p>
       <p>{product.product_slogan}</p>
       <p>{product.product_pairing}</p>
@@ -94,6 +111,9 @@ export const Product = ({ onAddCart }) => {
       <Button onClick={handleClick} variant="contained">
         Adicionar ao carrinho
       </Button>
+      <div>
+        <Button onClick={handleGoBack}>VOLTAR</Button>
+      </div>
     </div>
   );
 };

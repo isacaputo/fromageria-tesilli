@@ -13,15 +13,15 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddressForm from "../components/AddressForm";
-import PaymentForm from "../components/PaymentForm";
 import Review from "../components/Review";
+import { useState } from "react";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Fomageria Tesilli
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -29,26 +29,23 @@ function Copyright() {
   );
 }
 
-const steps = ["Endereço de entrega", "Confira o pedido", "Finalize o pedido"];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
+const steps = ["Dados do Cliente", "Revise e Finalize o Pedido"];
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export const Checkout = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
+export const Checkout = ({ cart, setShowCart }) => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [address, setAddress] = useState({
+    name: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+  });
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -56,6 +53,23 @@ export const Checkout = () => {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+  const handleGoBack = () => {
+    setShowCart(true);
+  };
+
+  const handleAddressChange = (entry) => {
+    setAddress(() => {
+      return {
+        ...address,
+        [entry.name]: entry.value,
+      };
+    });
+  };
+
+  const isValidAddress = () => {
+    const objectEntries = Object.entries(address);
+    console.log(objectEntries);
   };
 
   return (
@@ -92,7 +106,7 @@ export const Checkout = () => {
             ))}
           </Stepper>
           {activeStep === steps.length ? (
-            <React.Fragment>
+            <>
               <Typography variant="h5" gutterBottom>
                 Thank you for your order.
               </Typography>
@@ -101,26 +115,32 @@ export const Checkout = () => {
                 confirmation, and will send you an update when your order has
                 shipped.
               </Typography>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
-              {getStepContent(activeStep)}
+            <>
+              {activeStep === 0 && (
+                <AddressForm value={address} onChange={handleAddressChange} />
+              )}
+              {activeStep === 1 && <Review address={address} cart={cart} />}
+
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Voltar
                   </Button>
                 )}
-
                 <Button
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
+                  disabled={!isValidAddress()}
                 >
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  {activeStep === steps.length - 1
+                    ? "Finalizar Pedido"
+                    : "Continuar"}
                 </Button>
               </Box>
-            </React.Fragment>
+            </>
           )}
         </Paper>
         <Copyright />
