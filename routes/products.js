@@ -24,4 +24,50 @@ router.get("/:id", async function (req, res, next) {
   }
 });
 
+// Post a new product
+
 module.exports = router;
+router.post("/", async function (req, res, next ) {
+  const { 
+    product_name,
+    product_description,
+    product_half_price,
+    product_whole_price, 
+    product_half_weight,
+    product_whole_weight,
+    product_pairing, 
+    product_slogan, 
+    product_category, 
+    product_main_image, 
+    product_extra_image
+  } = req.body;
+  try {
+    await db(`INSERT INTO products (product_name,
+      product_description,
+      product_half_price,
+      product_whole_price, 
+      product_half_weight,
+      product_whole_weight,
+      product_pairing, 
+      product_slogan, 
+      product_category, 
+      product_main_image, 
+      product_extra_image)
+      VALUES (
+      '${product_name}',
+      '${product_description}',
+      '${product_half_price}',
+      '${product_whole_price}',
+      '${product_half_weight}',
+      '${product_whole_weight}',
+      '${product_pairing}',
+      '${product_slogan}',
+      '${product_category}',
+      '${product_main_image}',
+      '${product_extra_image}'
+      )`);
+      res.send({ message: "product has been added to the database"})
+  } catch(err) {
+    res.status(500).send({ message: err })
+  }
+})

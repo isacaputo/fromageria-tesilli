@@ -6,6 +6,7 @@ import { Layout } from "./components/Layout";
 import { ProductList } from "./pages/ProductList";
 import { Product } from "./pages/Product";
 import { Checkout } from "./pages/Checkout";
+import Admin from "./pages/Admin";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -81,6 +82,11 @@ function App() {
               />
             }
           />
+        </Route>
+        <Route
+        path="admin"
+        element={<Admin/>}
+        >
         </Route>
       </Routes>
     </div>

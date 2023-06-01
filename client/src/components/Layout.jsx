@@ -61,14 +61,21 @@ export function Layout({
     <>
       <AppBar position="static" elevation={0}>
         <Toolbar sx={{ flexWrap: "wrap" }}>
+          
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
           >
+            <Link href="#"
+              onClick={() => navigate("/")} color="inherit" underline="none">
+            
             FROMAGERIA TESILLI
+            </Link>
           </Typography>
+          
+          
           <nav>
             <Link
               variant="button"
@@ -87,6 +94,14 @@ export function Layout({
               onClick={() => navigate("/products")}
             >
               Products
+            </Link>
+            <Link
+             variant="button"
+             color="neutral.contrastText"
+             sx={{ my: 1, mx: 1.5 }}
+             href="#"
+             onClick={() => navigate("/admin")}>
+           Admin
             </Link>
             <IconButton aria-label="carrinho" onClick={onOpenCart}>
               <Badge color="secondary" badgeContent={cart.length}>
