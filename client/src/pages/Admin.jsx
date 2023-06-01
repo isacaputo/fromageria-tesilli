@@ -1,6 +1,7 @@
 import React from "react";
 import { TextField } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router"
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -21,8 +22,8 @@ import Button from "@mui/material/Button";
     product_category:"",
     product_main_image:"",
     product_extra_image:"",
-
   });
+  const navigate = useNavigate();
 
   const handleFormChange = (e) => {
     const value = e.target.value;
@@ -67,7 +68,11 @@ import Button from "@mui/material/Button";
   }
 
   return (
-    
+    <div>
+
+      <Button variant="contained" onClick={() => navigate("/")}>
+        Back to Shop
+      </Button>
       
       <Container
       maxWidth="sm"
@@ -231,6 +236,8 @@ import Button from "@mui/material/Button";
 
        </Grid>
        </Container>
+
+</div>
 
        
 
