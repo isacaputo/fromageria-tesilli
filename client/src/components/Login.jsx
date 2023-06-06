@@ -81,11 +81,7 @@ function Login() {
           </button>
         </div>
       </div>
-      <div className="text-center p-4">
-        <button className=" btn btn-outline-primary" onClick={requestData}>
-          Request protected data
-        </button>
-      </div>
+      
 
       {data && (
         <div className="text-center p-4">

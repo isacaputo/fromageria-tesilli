@@ -1,14 +1,16 @@
 var express = require("express");
 var router = express.Router();
-const db = require("../model/helper");
 const nodemailer = require("nodemailer");
 const { transporter } = require("../nodemailer/message_transporter");
-const models = require("../models")
+const models = require("../models");
+const { Op } = require("sequelize");
 
 /* GET from orders table */
 router.get("/", async function (req, res, next) {
   try {
-    const result = await models.Order.findAll();
+    const result = await models.Order.findAll({
+      include: models.Product,
+    });
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -24,14 +26,34 @@ router.post("/", async function (req, res, next) {
   try {
     const productIds = items.map((value) => value.id);
 
-    const productResponse = await db(
-      `SELECT id, product_whole_price, product_half_price FROM products WHERE id IN (${productIds.join(
-        ","
-      )});`
-    );
+    // const productResponse = await db(
+    //   `SELECT id, product_whole_price, product_half_price FROM products WHERE id IN (${productIds.join(
+    //     ","
+    //   )});`
+    // );
+
+    const productResponse = await models.Product.findAll({
+      attributes: [ 'id', 'product_whole_price', 'product_half_price'],
+      where: {
+        id: {
+          [Op.in]: productIds // Op refers to the operators object provided by sequelize. Defines various comparison
+          //operators for querying the database. In this case we are checking whether the Ids in the column match any of the Ids in the 
+          //product Ids array. 
+        }
+      }
+    })
+   
+
+     const productResponseData = productResponse.map((product) => product.dataValues);
+    
+    
+
+
+
     let amount = 0;
     items.forEach((item) => {
-      const selected = productResponse.data.find((p) => p.id === item.id);
+      const selected = productResponseData.find((p) => p.id === item.id);
+      console.log(selected);
       if (selected) {
         if (item.size % 1 === 0) {
           amount += selected.product_whole_price * item.quantity;
@@ -41,25 +63,40 @@ router.post("/", async function (req, res, next) {
       }
     });
 
-    await db(
-      `INSERT INTO orders 
-      (total_amount, client_name, client_email, client_phone, client_address) VALUES 
-      (${amount}, '${clientName}', '${clientEmail}', '${clientPhone}', '${clientAddress}');`
-    );
 
-    const ordersResponse = await db(
-      "SELECT id FROM orders ORDER BY date DESC LIMIT 1;"
-    );
+    await models.Order.create(
+    {
+      total_amount: amount,
+      client_name: clientName,
+      client_email: clientEmail,
+      client_phone: clientPhone,
+      client_address: clientAddress
+    })
 
-    const orderId = ordersResponse.data[0].id;
 
-    /* INSERT into order_has_product table */
-    const insertItemsQuery = items.map(
-      (item) =>
-        `INSERT INTO order_has_product (order_id, product_id, size, quantity) VALUES (${orderId}, ${item.id}, ${item.size}, ${item.quantity});`
-    );
+    const ordersResponse = await models.Order.findOne({
+      attributes:["id"],
+      order: [['date', 'DESC']]
+    });
 
-    await db(insertItemsQuery.join(""));
+
+    const orderId = ordersResponse.dataValues.id;
+
+    
+
+    const insertItemsQuery = items.map((item) => 
+    models.OrderHasProduct.create({
+      order_id: orderId,
+      product_id: item.id,
+      size: item.size,
+      quantity: item.quantity,
+
+    }));
+
+    await Promise.all(insertItemsQuery);
+
+
+
 
     let message = {
       from: "Fromageria Tesilli <isadora.caputo@gmail.com>",

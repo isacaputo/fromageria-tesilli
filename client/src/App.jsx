@@ -7,6 +7,8 @@ import { ProductList } from "./pages/ProductList";
 import { Product } from "./pages/Product";
 import { Checkout } from "./pages/Checkout";
 import Admin from "./pages/Admin";
+import Orders from "./pages/Orders";
+import EditProducts from "./pages/EditProducts";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -87,6 +89,14 @@ function App() {
         path="admin"
         element={<Admin/>}
         >
+        </Route>
+        <Route
+        path="orders"
+        element={<Orders/>}>
+        </Route>
+        <Route 
+        path="editproducts"
+        element={<EditProducts/>}>
         </Route>
       </Routes>
     </div>
