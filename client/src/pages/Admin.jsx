@@ -2,8 +2,12 @@ import { AppBar, Toolbar, Typography, Link, Container } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Login from '../components/Login';
+import { useContext } from 'react';
+import AuthContext from '../contexts/AuthContext';
 
 export default function Admin() {
+
+  const auth = useContext(AuthContext);
 
   const navigate = useNavigate();
   return (
@@ -46,6 +50,8 @@ export default function Admin() {
             >
               Back to Shop
             </Link>
+
+            {auth.user === true && 
             <Link
             variant="button"
             color="neutral.contrastText"
@@ -54,6 +60,10 @@ export default function Admin() {
             onClick={() => navigate("/orders")}>
               View Orders
             </Link>
+            }
+
+
+            {auth.user === true && 
             <Link variant="button"
             color="neutral.contrastText"
             sx={{ my: 1, mx: 1.5 }}
@@ -61,6 +71,7 @@ export default function Admin() {
             onClick={() => navigate("/editproducts")}>
             Edit products
             </Link>
+            }
 
           </nav>
       </Toolbar>

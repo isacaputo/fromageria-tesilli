@@ -117,9 +117,18 @@ import axios from "axios";
             color="neutral.contrastText"
             sx={{ my: 1, mx: 1.5 }}
             href="#"
+            onClick={() => navigate("/admin")}>
+              admin home
+            </Link>
+            <Link
+            variant="button"
+            color="neutral.contrastText"
+            sx={{ my: 1, mx: 1.5 }}
+            href="#"
             onClick={() => navigate("/orders")}>
               view orders
             </Link>
+
           </nav>
 
       </Toolbar>

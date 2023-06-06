@@ -9,6 +9,8 @@ import { Checkout } from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Orders from "./pages/Orders";
 import EditProducts from "./pages/EditProducts";
+import  AuthContext  from "./contexts/AuthContext";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -49,7 +51,24 @@ function App() {
     setCart(newCart);
   };
 
+  const [user, setUser] = useState(false);
+
+  function login(username, password) {
+    setUser(true);
+
+  }
+  function logout() {
+    setUser(false);
+  }
+
+  const authObject = {
+    user, 
+    login, 
+    logout,
+  }
+
   return (
+    <AuthContext.Provider value={authObject}>
     <div>
       <Routes>
         <Route
@@ -92,14 +111,17 @@ function App() {
         </Route>
         <Route
         path="orders"
-        element={<Orders/>}>
+        element={
+        <RequireAuth><Orders/></RequireAuth>}>
         </Route>
         <Route 
         path="editproducts"
-        element={<EditProducts/>}>
+        element={
+        <RequireAuth><EditProducts/></RequireAuth>}>
         </Route>
       </Routes>
     </div>
+    </AuthContext.Provider>
   );
 }
 export default App;

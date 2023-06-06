@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { Button, Typography } from "@mui/material";
+import  AuthContext  from "../contexts/AuthContext";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
 
 function Login() {
+
+  //auth is an object that contains user, login and logout
+const auth = useContext(AuthContext);
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
-  const [data, setData] = useState(null);
+  
 
   const { username, password } = credentials;
 
@@ -25,7 +33,8 @@ function Login() {
 
       //store it locally
       localStorage.setItem("token", data.token);
-      console.log(data.message, data.token);
+      auth.login();
+      // console.log(data.message, data.token);
       setData(data.message);
     } catch (error) {
       console.log(error);
@@ -34,60 +43,62 @@ function Login() {
   };
 
   const logout = () => {
+    auth.logout();
     localStorage.removeItem("token");
   };
 
-  const requestData = async () => {
-    try {
-      const { data } = await axios("/api/auth/profile", {
-        headers: {
-          authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      setData(data.message);
-      console.log(data.message);
-    } catch (error) {
-      console.log(error);
-      setData(error.message);
-    }
-  };
+  
 
   return (
     <div>
       <div>
+        {auth.user === false &&
+        <div>
         <div> if you are the admin, please log in</div>
-        <input
+        <Grid container spacing={2}>
+        <Grid item xs={6}>
+        <TextField
           value={username}
           onChange={handleChange}
           name="username"
           type="text"
-          className="form-control mb-2"
+          variant="standard"
           placeholder="username"
         />
-        <input
+        </Grid>
+        <Grid item sx={6}>
+        <TextField
           value={password}
           onChange={handleChange}
           name="password"
           type="password"
-          className="form-control mb-2"
+          variant="standard"
           placeholder="password"
         />
+        </Grid>
+        </Grid>
+      
+        </div>
+        }
+<br></br>
         <div className="d-flex gap-2 justify-content-center">
-          <button className="btn btn-primary" onClick={login}>
+          {auth.user === false && <Button variant="contained" onClick={login}>
             Log in
-          </button>
-          <button className="btn btn-outline-dark ml-2" onClick={logout}>
+          </Button>
+          }
+          {auth.user === true &&
+          <div>
+          <Button variant="contained" onClick={logout}>
             Log out
-          </button>
+          </Button>
+          <Typography>Welcome Admin! Navigate the menu above to make changes</Typography>
+          </div>
+          }
         </div>
       </div>
       
 
-      {data && (
-        <div className="text-center p-4">
-          <div className="alert">{data}</div>
-        </div>
-      )}
+      
     </div>
   );
 }

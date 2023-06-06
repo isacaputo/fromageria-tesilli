@@ -41,6 +41,8 @@ export default function Orders() {
   return (
     <>
 
+    
+
     <AppBar>
       <Toolbar sx={{ flexWrap: "wrap" }}>
       <Typography
@@ -80,6 +82,14 @@ export default function Orders() {
             color="neutral.contrastText"
             sx={{ my: 1, mx: 1.5 }}
             href="#"
+            onClick={() => navigate("/admin")}>
+              admin home
+            </Link>
+            <Link
+            variant="button"
+            color="neutral.contrastText"
+            sx={{ my: 1, mx: 1.5 }}
+            href="#"
             onClick={() => navigate("/editproducts")}>
               Edit Products
             </Link>
@@ -94,6 +104,9 @@ export default function Orders() {
     sx={{
       mt:10
       }}>
+
+{orders.length === 0 && 
+    <Typography> No orders right now!</Typography>}
       
       <List>
       {orders.map((order) => (
