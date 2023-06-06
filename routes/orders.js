@@ -3,12 +3,13 @@ var router = express.Router();
 const db = require("../model/helper");
 const nodemailer = require("nodemailer");
 const { transporter } = require("../nodemailer/message_transporter");
+const models = require("../models")
 
 /* GET from orders table */
 router.get("/", async function (req, res, next) {
   try {
-    const result = await db(`SELECT * FROM orders;`);
-    res.send(result.data);
+    const result = await models.Order.findAll();
+    res.send(result);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);

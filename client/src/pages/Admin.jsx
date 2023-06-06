@@ -1,10 +1,17 @@
 import React from "react";
 import { TextField } from "@mui/material";
+import Login from "../components/Login";
 import { useState } from "react";
 import { useNavigate } from "react-router"
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import axios from "axios";
+
 
 
 
@@ -55,24 +62,73 @@ import Button from "@mui/material/Button";
     })
   }
 
+  
+
   const addNewProduct = async (newProductInput) => {
     try {
-      await fetch("/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProductInput)
+      await axios.post("/api/products", newProductInput, {
+        headers: { 
+          "Content-Type": "application/json",
+          authorization: "Bearer " + localStorage.getItem("token"), 
+        }
       });
     } catch (error) {
-
-  }
-  }
+      console.log(error);
+    }
+  };
 
   return (
+    <>
+    <AppBar>
+      <Toolbar sx={{ flexWrap: "wrap" }}>
+      <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
+          >
+            <Link href="#"
+              onClick={() => navigate("/")} color="inherit" underline="none">
+            
+            FROMAGERIA TESILLI
+            </Link>
+          </Typography>
+
+          <Typography
+          variant="h6"
+          color="inherit"
+          noWrap
+          sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
+          >
+           ADMIN VIEW 
+          </Typography>
+
+          <nav>
+            <Link
+            variant="button"
+            color="neutral.contrastText"
+            sx={{ my: 1, mx: 1.5 }}
+            href="#"
+            onClick={() => navigate("/")}
+            >
+              Back to Shop
+            </Link>
+          </nav>
+
+      </Toolbar>
+    </AppBar>
     <div>
 
-      <Button variant="contained" onClick={() => navigate("/")}>
-        Back to Shop
-      </Button>
+<Container
+sx={{
+mt:10
+}}>
+<Login>
+
+</Login>
+
+</Container>
+     
       
       <Container
       maxWidth="sm"
@@ -80,7 +136,7 @@ import Button from "@mui/material/Button";
         border: '1px solid #000',
         borderRadius: '4px',
         padding: '16px',
-        mt: 3, 
+        mt: 10, 
         mb: 4
       }}>
         <h4>Add a New Product</h4>
@@ -238,6 +294,7 @@ import Button from "@mui/material/Button";
        </Container>
 
 </div>
+</>
 
        
 
