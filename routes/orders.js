@@ -4,9 +4,10 @@ const nodemailer = require("nodemailer");
 const { transporter } = require("../nodemailer/message_transporter");
 const models = require("../models");
 const { Op } = require("sequelize");
+var userShouldBeLoggedIn = require('../guards/userShouldBeLoggedIn')
 
 /* GET from orders table */
-router.get("/", async function (req, res, next) {
+router.get("/", userShouldBeLoggedIn, async function (req, res, next) {
   try {
     const result = await models.Order.findAll({
       include: models.Product,

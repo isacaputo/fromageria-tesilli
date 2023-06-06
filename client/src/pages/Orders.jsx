@@ -13,21 +13,24 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box'
+import axios from 'axios'
 
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    getOrders()
+    getOrders();
   }, [])
 
   const getOrders = async () => {
     try {
-      const response = await fetch(`/api/orders`, {
-        method: "GET",
+     const response = await axios.get("/api/orders", {
+        headers: { 
+          authorization: "Bearer " + localStorage.getItem("token"), 
+        }
       });
-      const data = await response.json();
+      const data = response.data;
       setOrders(data);
     } catch(err) {
       console.log(err);
@@ -77,8 +80,8 @@ export default function Orders() {
             color="neutral.contrastText"
             sx={{ my: 1, mx: 1.5 }}
             href="#"
-            onClick={() => navigate("/admin")}>
-              List New Product
+            onClick={() => navigate("/editproducts")}>
+              Edit Products
             </Link>
 
           </nav>

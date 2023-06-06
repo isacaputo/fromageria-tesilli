@@ -99,7 +99,7 @@ import axios from "axios";
           noWrap
           sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
           >
-           ADMIN VIEW 
+           EDIT PRODUCTS
           </Typography>
 
           <nav>
