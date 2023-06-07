@@ -80,8 +80,7 @@ export default function Admin() {
 <Container
 maxWidth="sm"
 sx={{
-  border: '1px solid grey',
-  borderRadius: '4px',
+  
   padding: '16px',
   mt: 10, 
   mb: 4
