@@ -42,6 +42,27 @@ router.get("/:id", async function (req, res, next) {
   }
 })
 
+router.delete('/:id', userShouldBeLoggedIn, async function (req, res, next) {
+  const { id } = req.params;
+  try { const product = await models.Product.findOne({
+    where: {
+      id,
+    },
+  });
+
+  if (!product) {
+    return res.status(404).send({ message: "Product not found" });
+  }
+
+  await product.destroy();
+
+  res.send({ message: "Product deleted successfully" });
+
+  } catch(error) {
+    res.status(500).send({ message: error });
+  }
+})
+
  
 
 router.post("/", userShouldBeLoggedIn, async function (req, res) {

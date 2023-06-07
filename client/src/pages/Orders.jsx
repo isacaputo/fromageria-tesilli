@@ -112,12 +112,16 @@ export default function Orders() {
       {orders.map((order) => (
         <React.Fragment key={order.id}>
         <ListItem>
-          <ListItemText> Order No #{order.id} Date: {order.date}
+          <ListItemText> 
+            <Typography variant='h6'>Order No #{order.id} Date: {order.date}</Typography>
           <ListItemText>
-          Email: {order.client_email}, Tel: {order.client_phone}, 
+          Email: {order.client_email} 
           </ListItemText>
           <ListItemText>
-          {order.client_address}
+          Tel: {order.client_phone}, 
+          </ListItemText>
+          <ListItemText>
+          Shipping Address: {order.client_address}
           </ListItemText>
           <ul>
             {order.Products.map((product) => (

@@ -20,6 +20,7 @@
     "mysql2": "^3.3.3",
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.22",
+    "react-select": "^5.7.3",
     "sequelize": "^6.32.0"
   },
   "devDependencies": {

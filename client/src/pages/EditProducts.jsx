@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router"
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
@@ -10,12 +10,16 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import axios from "axios";
+import Box from "@mui/material/Box";
+import RemoveProduct from "../components/RemoveProduct";
 
 
 
 
 
  export default function EditProducts() {
+  const [ editProducts, setEditProducts] = useState(true);
+  const [products, setProducts] = useState([]);
   const [newProductInput, setNewProductInput] = useState({
     product_name: "",
     product_description: "",
@@ -30,6 +34,11 @@ import axios from "axios";
     product_extra_image:"",
   });
   const navigate = useNavigate();
+  const [ addProductSuccess, setAddProductSucess ] = useState(false);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const handleFormChange = (e) => {
     const value = e.target.value;
@@ -61,6 +70,18 @@ import axios from "axios";
     })
   }
 
+  const getProducts = async () => {
+    try {
+      const response = await fetch(`/api/products`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   
 
   const addNewProduct = async (newProductInput) => {
@@ -71,6 +92,8 @@ import axios from "axios";
           authorization: "Bearer " + localStorage.getItem("token"), 
         }
       });
+       getProducts();
+       setAddProductSucess(true);
     } catch (error) {
       console.log(error);
     }
@@ -140,28 +163,53 @@ sx={{
 mt:10
 }}>
 
+  <Grid container spacing={2}>
+    
+    <Grid item xs={12}>
+    <Box textAlign="center">
+      <div>
+        { editProducts === false &&
+      <Button onClick={() => setEditProducts(true)}>
+        List A New Product
+      </Button>
+      }
+    {editProducts === true && 
+    <Button onClick={() => setEditProducts(false)}>
+      Remove a product
+    </Button>
+    }
+    </div>
+    </Box>
+    </Grid>
+   
+  </Grid>
+
 
 </Container>
      
-      
+      {editProducts === true &&
       <Container
       maxWidth="sm"
       sx={{
-        border: '1px solid #000',
-        borderRadius: '4px',
+        border: '1px solid grey',
         padding: '16px',
-        mt: 10, 
+        mt: 5, 
         mb: 4
       }}>
-        <h4>Add a New Product</h4>
+        <Box textAlign="center">
+        <Typography variant="h6">
+          List A New Product
+        </Typography>
+        </Box>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
         <TextField
       required
       id="product_name"
       name="product_name"
       label="Product Name"
       variant="standard"
+      fullWidth
       value={newProductInput.product_name}
       onChange={handleFormChange}
       >
@@ -176,7 +224,7 @@ mt:10
       name="product_description"
       label="Product Description"
       variant="standard"
-      sx={{ width: '435px' }}
+      fullWidth
       value={newProductInput.product_description}
       onChange={handleFormChange}>
        </TextField>
@@ -189,6 +237,7 @@ mt:10
       name="product_half_price"
       label="Product Half Price"
       variant="standard"
+      fullWidth
       value={newProductInput.product_half_price}
       onChange={handleFormChange}>
        </TextField>
@@ -201,6 +250,7 @@ mt:10
       name="product_whole_price"
       label="Product Whole Price"
       variant="standard"
+      fullWidth
       value={newProductInput.product_whole_price}
       onChange={handleFormChange}>
        </TextField>
@@ -213,6 +263,7 @@ mt:10
       name="product_half_weight"
       label="Product Half Weight"
       variant="standard"
+      fullWidth
       value={newProductInput.product_half_weight}
       onChange={handleFormChange}>
        </TextField>
@@ -225,6 +276,7 @@ mt:10
       name="product_whole_weight"
       label="Product Whole Weight"
       variant="standard"
+      fullWidth
       value={newProductInput.product_whole_weight}
       onChange={handleFormChange}
       >
@@ -238,6 +290,7 @@ mt:10
       name="product_pairing"
       label="Product Pairing"
       variant="standard"
+      fullWidth
       value={newProductInput.product_pairing}
       onChange={handleFormChange}>
        </TextField>
@@ -250,6 +303,7 @@ mt:10
       name="product_slogan"
       label="Product Slogan"
       variant="standard"
+      fullWidth
       value={newProductInput.product_slogan}
       onChange={handleFormChange}
       >
@@ -263,6 +317,7 @@ mt:10
       name="product_category"
       label="Product Category"
       variant="standard"
+      fullWidth
       value={newProductInput.product_category}
       onChange={handleFormChange}
       >
@@ -276,6 +331,7 @@ mt:10
       name="product_main_image"
       label="Main Image URL"
       variant="standard"
+      fullWidth
       value={newProductInput.product_main_image}
       onChange={handleFormChange}>
        </TextField>
@@ -288,24 +344,46 @@ mt:10
       name="product_extra_image"
       label="Extra Image URL"
       variant="standard"
+      fullWidth
       value={newProductInput.product_extra_image}
       onChange={handleFormChange}>
        </TextField>
        </Grid>
 
-       <Grid item xs={8}>
-
+      {
+      addProductSuccess === true &&
+       <Grid item xs={12}>
+        <Box textAlign="center">
+        <Typography>
+          Product Added Successfully
+          <Button onClick={() => setAddProductSucess(false)}>
+            OK
+          </Button>
+        </Typography>
+        </Box>
        </Grid>
+       }
 
-      <Grid item xs={4}>
+       
+
+      <Grid item xs={12}>
+        <Box textAlign="center">
        <Button variant="contained"
        onClick={handleSubmit}>
         Add Product
        </Button>
+       </Box>
        </Grid>
 
        </Grid>
        </Container>
+       }
+
+{editProducts === false &&
+       <RemoveProduct/>
+}
+
+       
 
 </div>
 </>

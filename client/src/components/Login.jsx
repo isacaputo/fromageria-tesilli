@@ -4,6 +4,7 @@ import { Button, Typography } from "@mui/material";
 import  AuthContext  from "../contexts/AuthContext";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 function Login() {
 
@@ -34,11 +35,10 @@ const auth = useContext(AuthContext);
       //store it locally
       localStorage.setItem("token", data.token);
       auth.login();
-      // console.log(data.message, data.token);
-      setData(data.message);
+      
     } catch (error) {
       console.log(error);
-      setData(error.message);
+      
     }
   };
 
@@ -54,25 +54,33 @@ const auth = useContext(AuthContext);
       <div>
         {auth.user === false &&
         <div>
-        <div> if you are the admin, please log in</div>
-        <Grid container spacing={2}>
-        <Grid item xs={6}>
+          <Grid container spacing={5}>
+          <Grid item xs={12} sm={12}>
+           <Box textAlign="center"> 
+        <Typography variant="h6" gutterBottom>
+          Welcome to Fromagergia Tesilli Admin</Typography>
+          </Box> 
+        </Grid>
+        {/* <Grid container spacing={5}> */}
+        <Grid item xs={12} sm={6}>
         <TextField
           value={username}
           onChange={handleChange}
           name="username"
           type="text"
+          fullWidth
           variant="standard"
           placeholder="username"
         />
         </Grid>
-        <Grid item sx={6}>
+        <Grid item xs={12} sm={6}>
         <TextField
           value={password}
           onChange={handleChange}
           name="password"
           type="password"
           variant="standard"
+          fullWidth
           placeholder="password"
         />
         </Grid>
@@ -81,20 +89,26 @@ const auth = useContext(AuthContext);
         </div>
         }
 <br></br>
-        <div className="d-flex gap-2 justify-content-center">
+        <Grid container>
+         <Grid item tem xs={12}>
+          <Box textAlign="center">
+        <div>
           {auth.user === false && <Button variant="contained" onClick={login}>
             Log in
           </Button>
           }
           {auth.user === true &&
           <div>
+            <Typography variant="h6" gutterBottom>Welcome Admin! Navigate the menu above to make changes</Typography>
           <Button variant="contained" onClick={logout}>
             Log out
           </Button>
-          <Typography>Welcome Admin! Navigate the menu above to make changes</Typography>
           </div>
           }
         </div>
+        </Box>
+        </Grid> 
+        </Grid>
       </div>
       
 
