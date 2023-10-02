@@ -26,18 +26,21 @@ The purpose of the webpage is to offer a digital channel for purchasing cheeses 
 
 ## Database & ORM
 
-- **Sequelize** as the ORM to manage interactions with the database;
 - **MySQL** as the database management system.
+- **Sequelize** as the ORM to manage interactions with the database;
+
+### DB Design
+
+_3 Tables with Many-to-Many Relationship among them_
+![Fromageria DB Design](/database_visualization.png)
 
 ## Setup
 
-### Dependencies
-
-#### Clone the Repository
+### Clone the Repository
 
 `https://github.com/isacaputo/fromageria-tesilli.git`
 
-#### Required downloads
+### Required downloads
 
 React / MySQL / Node / NPM
 
@@ -49,9 +52,13 @@ Run `npm install` in the project folder to install dependencies related to Expre
 
 Create .env file in project directory and add
 
+DB_HOST=localhost
+
+DB_USER=root
+
 DB_NAME=fromageria
 
-DB*PASS=\_YOUR_PASSWORD*
+DB_PASS=_YOUR PASSWORD_
 
 - Type `mysql -u root -p` to access the MySQL CLI using your password.
 - In the MySQL CLI, type create database **fromageria**; to create a database in MySQL.
@@ -65,5 +72,3 @@ cd client and run npm run dev to start client server in development mode with ho
 Client is configured so all API calls will be proxied to port 4000 for a smoother development experience. Yay!
 You can test your client app in http://localhost:5173
 You can test your API in http://localhost:4000/api
-
-**LET'S GET TO WORK**
