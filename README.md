@@ -3,6 +3,8 @@
 Fromageria Tesilli is **an artisan cheese factory located at Belo Horizonte - Brazil**.
 The Fromageria produces cured artisanal cheeses with semi-cooked dough, carefully crafted combining delicious ingredients with creativity.
 
+![Fromageria Tesilli Webpage](/home_screenshot.png)
+
 ## About the project
 
 The project is built with the following stack of web development frameworks:
@@ -13,39 +15,31 @@ The project is built with the following stack of web development frameworks:
 
 > **MySQL** for the database.
 
-The purpose of the webpage is to offer a digital channel for purchasing cheeses online. It displays the 20 products portfolio and offers a shopping cart and checkout process to the customers. The project also aims to provide the Fromageria with a well organized and centralized database.
+The purpose of the webpage is to offer a digital channel for purchasing cheeses online. It displays the **20 products portfolio** and offers a shopping cart and checkout process to the customers. The project also aims to provide the Fromageria with a well organized and centralized database.
 
 ## Client side
 
 - **React Router** for the client side routing;
 - **React Context** for sharing data across multiple components;
 - **Vite** as a local development server for providing better performance for the web application;
-- **MaterialUI** as the React component library.
+- **Material UI** as the React component library.
 
-_Color pallete_
+## Database & ORM
 
-- Primary:
-
-  - main: "#549470"
-
-- Secondary:
-
-  - main: "#F5CB8B",
-
-- Neutral:
-  - contrastText: "#FFFFFF".
-
-## Server
-
-- **Sequelize** for the database migration mechanism;
-
-## The Database Schema
-
-> For the database visualization, please check "database_visualization.png" file located at the root of the project.
+- **Sequelize** as the ORM to manage interactions with the database;
+- **MySQL** as the database management system.
 
 ## Setup
 
 ### Dependencies
+
+#### Clone the Repository
+
+`https://github.com/isacaputo/fromageria-tesilli.git`
+
+#### Required downloads
+
+React / MySQL / Node / NPM
 
 Run `npm install` in the project folder to install dependencies related to Express (the server).
 
