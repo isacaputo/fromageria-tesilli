@@ -7,7 +7,7 @@ The Fromageria produces cured artisanal cheeses carefully crafted combining deli
 
 ## About the project
 
-The project is built with the following stack of web development frameworks:
+The project is built with the following full stack development frameworks:
 
 > **React** for the user interface;
 
@@ -33,3 +33,7 @@ The purpose of the webpage is to offer a digital channel for purchasing cheeses 
 
 _3 Tables with Many-to-Many Relationship among them_
 ![Fromageria DB Design](/database_visualization.png)
+
+### More about the Fromageria Tesilli
+
+[Follow the Fromageria on Instagram](https://www.instagram.com/fromageria.tesilli/)
