@@ -2,18 +2,12 @@ import * as React from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import FormGroup from "@mui/material/FormGroup";
 
 export default function AddressForm({ value, onChange }) {
-  const [checked, setChecked] = React.useState([0]);
+  // States declaration
+  const [checked, setChecked] = useState([0]);
 
+  // Handle toggle index function declaration
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -27,6 +21,7 @@ export default function AddressForm({ value, onChange }) {
     setChecked(newChecked);
   };
 
+  // Handle form change function declaration
   const handleFormChange = (e) => {
     const { value, name } = e.target;
     onChange({
