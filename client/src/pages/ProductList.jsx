@@ -7,12 +7,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 export const ProductList = ({ onAddCart }) => {
+  // States declaration
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     getProducts();
   }, []);
 
+  // Get products list function declaration
   const getProducts = async () => {
     try {
       const response = await fetch(`/api/products`, {
