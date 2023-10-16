@@ -1,11 +1,10 @@
-import {React, useEffect, useState} from 'react'
-import Select from 'react-select'
-import { Container, Grid, Typography, Button, Box } from '@mui/material'
-import axios from 'axios';
-
-
+import { React, useEffect, useState } from "react";
+import Select from "react-select";
+import { Container, Grid, Typography, Button, Box } from "@mui/material";
+import axios from "axios";
 
 export default function RemoveProduct() {
+  // States declaration
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
@@ -15,6 +14,7 @@ export default function RemoveProduct() {
     getProducts();
   }, []);
 
+  // Get products function declaration
   const getProducts = async () => {
     try {
       const response = await fetch(`/api/products`, {
@@ -27,116 +27,106 @@ export default function RemoveProduct() {
     }
   };
 
+  // Handle product change function declaration
   const handleProductChange = (selectedOption) => {
     setSelectedProduct(selectedOption);
-  }
+  };
 
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      color: '#000', // Set the text color to black
+      color: "#000", // Set the text color to black
     }),
   };
 
+  // Handle product delete function declaration
   const handleDelete = (selectedProductId) => {
     deleteProduct(selectedProductId);
     setSelectedProduct("");
     setSelectedOption("");
-
-  }
+  };
 
   const deleteProduct = async (selectedProductId) => {
     try {
-      const response = await axios.delete(`/api/products/${selectedProductId}`, {
-        headers: {
-          authorization: "Bearer " + localStorage.getItem("token"), 
+      const response = await axios.delete(
+        `/api/products/${selectedProductId}`,
+        {
+          headers: {
+            authorization: "Bearer " + localStorage.getItem("token"),
+          },
         }
-      });
+      );
       if (response.status === 200) {
-        console.log('Product deleted successfully');
+        console.log("Product deleted successfully");
         getProducts();
         setDeleteSuccess(true);
       } else {
-        console.log('Failed to delete product')
+        console.log("Failed to delete product");
       }
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
-  
+  return (
+    <div>
+      <Container
+        maxWidth="md"
+        sx={{
+          borderRadius: "4px",
+          padding: "16px",
+          mt: 8,
+          mb: 4,
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Box textAlign="center">
+              <Typography variant="h6">
+                Select the product you wish to delete
+              </Typography>
+            </Box>
+          </Grid>
 
+          <Grid item xs={2}></Grid>
 
-return (
-    <>
-<Container
-maxWidth="md"
-sx={{
-  borderRadius: '4px',
-  padding: '16px',
-  mt: 8, 
-  mb: 4
-}}>
+          <Grid item xs={8}>
+            <Select
+              options={products.map((product) => ({
+                value: product.id,
+                label: product.product_name,
+              }))}
+              value={selectedProduct}
+              onChange={handleProductChange}
+              styles={customStyles}
+            ></Select>
+          </Grid>
 
-  <Grid container spacing={2}>
+          <Grid item xs={2}></Grid>
 
-    <Grid item xs={12}>
-      <Box textAlign="center">
-      <Typography variant='h6'>
-        Select the product you wish to delete
-      </Typography>
-      </Box>
+          <Grid item xs={12}>
+            <Box textAlign="center">
+              <Button
+                variant="contained"
+                onClick={() => handleDelete(selectedProduct?.value)}
+              >
+                Delete Product
+              </Button>
+            </Box>
+          </Grid>
 
-    </Grid>
-
-  <Grid item xs={2}>
-  </Grid>
-
-    <Grid item xs={8}>
-    <Select
-    options={products.map((product) => ({
-      value: product.id,
-      label: product.product_name
-    }))}
-    value={selectedProduct}
-    onChange={handleProductChange}
-    styles={customStyles}
-    >
-    </Select>
- 
-    </Grid>
-
-    <Grid item xs={2}>
-  </Grid>
-   
-
-    <Grid item xs={12}>
-      <Box textAlign="center">
-    <Button
-    variant='contained'
-    onClick={() => handleDelete(selectedProduct?.value)}>
-      Delete Product
-    </Button>
-    </Box>
-    </Grid>
-
-    {deleteSuccess === true && 
-    <Grid item xs={12}>
-      <Box textAlign="center">
-      <Typography>
-        Product Deleted Successfully
-        <Button onClick={() => setDeleteSuccess(false)}>
-        ok
-      </Button>
-      </Typography>
-      </Box>
-  
-
-    </Grid> }
-
-    
-  </Grid>
-    </Container>
-    </>
-  )
+          {deleteSuccess === true && (
+            <Grid item xs={12}>
+              <Box textAlign="center">
+                <Typography>
+                  Product Deleted Successfully
+                  <Button onClick={() => setDeleteSuccess(false)}>ok</Button>
+                </Typography>
+              </Box>
+            </Grid>
+          )}
+        </Grid>
+      </Container>
+    </div>
+  );
 }
