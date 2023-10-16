@@ -7,7 +7,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -20,16 +19,18 @@ const defaultSize = 1;
 const defaultQuantity = 1;
 
 export const Product = ({ onAddCart }) => {
+  const navigate = useNavigate();
   const { id } = useParams();
+  // States declaration
   const [product, setProduct] = useState({});
   const [size, setSize] = useState(defaultSize);
   const [quantity, setQuantity] = useState(defaultQuantity);
-  const navigate = useNavigate();
 
   useEffect(() => {
     getProductDetail(id);
   }, [id]);
 
+  // Get product detail function declaration
   const getProductDetail = async (id) => {
     try {
       const response = await fetch(`/api/products/${id}`, {
@@ -42,6 +43,7 @@ export const Product = ({ onAddCart }) => {
     }
   };
 
+  // Handle click function declaration
   const handleClick = () => {
     onAddCart({
       name: product.product_name,
@@ -56,10 +58,12 @@ export const Product = ({ onAddCart }) => {
     setQuantity(defaultQuantity);
   };
 
+  // Handle selection of product function declaration
   const handleSelection = (event) => {
     setSize(event.target.value);
   };
 
+  // Handle go back to Product List page function declaration
   const handleGoBack = () => {
     navigate(`/products`);
   };
