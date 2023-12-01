@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Outlet } from "react-router-dom";
 import {
   Badge,
@@ -17,7 +17,6 @@ import {
   Link,
   Button,
   AppBar,
-  Container,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -58,24 +57,25 @@ export function Layout({
   };
 
   return (
-    <>
+    <div>
       <AppBar position="static" elevation={0}>
         <Toolbar sx={{ flexWrap: "wrap" }}>
-          
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
           >
-            <Link href="#"
-              onClick={() => navigate("/")} color="inherit" underline="none">
-            
-            FROMAGERIA TESILLI
+            <Link
+              href="#"
+              onClick={() => navigate("/")}
+              color="inherit"
+              underline="none"
+            >
+              FROMAGERIA TESILLI
             </Link>
           </Typography>
-          
-          
+
           <nav>
             <Link
               variant="button"
@@ -96,12 +96,13 @@ export function Layout({
               Products
             </Link>
             <Link
-             variant="button"
-             color="neutral.contrastText"
-             sx={{ my: 1, mx: 1.5 }}
-             href="#"
-             onClick={() => navigate("/admin")}>
-           Admin
+              variant="button"
+              color="neutral.contrastText"
+              sx={{ my: 1, mx: 1.5 }}
+              href="#"
+              onClick={() => navigate("/admin")}
+            >
+              Admin
             </Link>
             <IconButton aria-label="carrinho" onClick={onOpenCart}>
               <Badge color="secondary" badgeContent={cart.length}>
@@ -200,6 +201,6 @@ export function Layout({
         </Typography>
         <Copyright />
       </Box>
-    </>
+    </div>
   );
 }

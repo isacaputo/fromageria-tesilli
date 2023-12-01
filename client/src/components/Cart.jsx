@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -12,13 +13,15 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
 export default function Cart() {
-  const [state, setState] = React.useState({
+  // States declaration
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
 
+  // Handle toggle drawer function declaration
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&

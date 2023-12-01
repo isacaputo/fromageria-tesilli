@@ -20,6 +20,7 @@ const steps = ["Dados do Cliente", "Revise e Finalize o Pedido"];
 
 export const Checkout = ({ cart, onSuccess }) => {
   const navigate = useNavigate();
+  // States declaration
   const [activeStep, setActiveStep] = useState(0);
   const [orderId, setOrderId] = useState();
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export const Checkout = ({ cart, onSuccess }) => {
     zip: "",
   });
 
+  // Save order function declaration
   const saveOrder = async () => {
     try {
       setLoading(true);
@@ -71,6 +73,7 @@ export const Checkout = ({ cart, onSuccess }) => {
     }
   };
 
+  // Handle next step function declaration
   const handleNext = () => {
     if (activeStep === 1) {
       saveOrder();
@@ -79,10 +82,12 @@ export const Checkout = ({ cart, onSuccess }) => {
     }
   };
 
+  // Handle back to previous step function declaration
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
 
+  // Handle data update function declaration
   const handleDataChange = (entry) => {
     setOrderDetails(() => {
       return {
@@ -92,6 +97,7 @@ export const Checkout = ({ cart, onSuccess }) => {
     });
   };
 
+  // Handle checking address function declaration
   const isValidAddress = () => {
     const objectValues = Object.values(orderDetails);
     return objectValues.every((input) => input !== "");

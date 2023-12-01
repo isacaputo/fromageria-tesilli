@@ -1,9 +1,7 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { CardActionArea, Box } from "@mui/material";
@@ -11,6 +9,8 @@ import { formatCurrency } from "../helper";
 
 export default function ProductCard({ name, id, description, image, price }) {
   const navigate = useNavigate();
+
+  // Handle click on selected product function declaration
   const handleClick = (id) => {
     navigate(`/products/${id}`);
   };
@@ -43,11 +43,6 @@ export default function ProductCard({ name, id, description, image, price }) {
             {description}
           </Typography>
         </CardContent>
-        {/* <CardActions>
-        <Button size="small" onClick={() => handleClick(id)}>
-        Detalhes
-        </Button>
-      </CardActions> */}
       </CardActionArea>
     </Card>
   );

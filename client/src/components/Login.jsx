@@ -7,9 +7,10 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 function Login() {
-  //auth is an object that contains user, login and logout
+  // Auth is an object that contains user, login and logout properties
   const auth = useContext(AuthContext);
 
+  // States declaration
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -29,7 +30,7 @@ function Login() {
         data: credentials,
       });
 
-      //store it locally
+      // Store it locally
       localStorage.setItem("token", data.token);
       auth.login();
     } catch (error) {
