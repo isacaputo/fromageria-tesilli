@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 function Login() {
-  //auth is an object that contains user, login and logout
+  // auth is an object that contains user, login and logout
   const auth = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({
