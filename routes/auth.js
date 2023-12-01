@@ -1,16 +1,15 @@
-var express = require("express");
-var router = express.Router();
-var jwt = require("jsonwebtoken");
-var userShouldBeLoggedIn = require("../guards/userShouldBeLoggedIn");
-// var db = require("../model/helper");
+const express = require("express");
+const router = express.Router();
+const jwt = require("jsonwebtoken");
+const userShouldBeLoggedIn = require("../guards/userShouldBeLoggedIn");
 require("dotenv").config();
-var bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const models = require("../models");
 
 const supersecret = process.env.SUPER_SECRET;
 
-//set username and password
+// Registration part: set username and password for the user
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   //hash password with a few salt rounds converts password into unreadable string
@@ -28,11 +27,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-//receive a token back if the password is correct
+// Authentication part: receive a token back if the password is correct
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
-  console.log("password", password);
 
   try {
     const user = await models.Auth.findOne({
@@ -45,10 +42,13 @@ router.post("/login", async (req, res) => {
       if (!user.password) throw new Error("Invalid password");
 
       const correctPassword = await bcrypt.compare(password, user.password);
+      // the compare method will return a boolean (either the password match or doesn't)
 
       if (!correctPassword) throw new Error("Incorrect password");
 
-      var token = jwt.sign({ user_id }, supersecret);
+      const token = jwt.sign({ user_id }, supersecret);
+      // the sign method needs two things to work: payload and a supersecret (stored in the backend)
+
       res.send({ message: "Login successful, here is your token", token });
     } else {
       throw new Error("User does not exist");
@@ -58,8 +58,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Authorization part: check if the user is logged in with the middleware function userShouldBeLoggedIn
 router.get("/adminview", userShouldBeLoggedIn, async (req, res) => {
-  res.send({ message: "Welcome, Admin." });
+  res.send({ message: "Welcome, Admin!" });
 });
 
 module.exports = router;
