@@ -39,12 +39,10 @@ router.post("/login", async (req, res) => {
     });
     if (user) {
       const user_id = user.id;
-      if (!user.password) throw new Error("Invalid password");
+      if (!user.password) throw new Error("There is no password");
 
       const correctPassword = await bcrypt.compare(password, user.password);
       // the compare method will return a boolean (either the password match or doesn't)
-
-      if (!correctPassword) throw new Error("Incorrect password");
 
       const token = jwt.sign({ user_id }, supersecret);
       // the sign method needs two things to work: payload and a supersecret (stored in the backend)

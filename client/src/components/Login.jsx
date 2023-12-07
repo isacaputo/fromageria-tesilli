@@ -29,7 +29,7 @@ function Login() {
         data: credentials,
       });
 
-      //store it locally
+      // Stores the token locally
       localStorage.setItem("token", data.token);
       auth.login();
     } catch (error) {
@@ -45,7 +45,7 @@ function Login() {
   return (
     <div>
       <div>
-        {auth.user === false && (
+        {!auth.user && (
           <div>
             <Grid container spacing={5}>
               <Grid item xs={12} sm={12}>
@@ -86,12 +86,12 @@ function Login() {
           <Grid item tem xs={12}>
             <Box textAlign="center">
               <div>
-                {auth.user === false && (
+                {!auth.user && (
                   <Button variant="contained" onClick={login}>
                     Log in
                   </Button>
                 )}
-                {auth.user === true && (
+                {auth.user && (
                   <div>
                     <Typography variant="h6" gutterBottom>
                       Welcome Admin! Navigate the menu above to make changes

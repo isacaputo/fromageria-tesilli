@@ -49,7 +49,7 @@ export default function Admin() {
               Back to Shop
             </Link>
 
-            {auth.user === true && (
+            {auth.user && (
               <Link
                 variant="button"
                 color="neutral.contrastText"
@@ -61,7 +61,7 @@ export default function Admin() {
               </Link>
             )}
 
-            {auth.user === true && (
+            {auth.user && (
               <Link
                 variant="button"
                 color="neutral.contrastText"
