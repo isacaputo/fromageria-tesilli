@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { Container } from "@mui/material";
-import { formatCurrency } from "../helper";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { api } from '../config/api';
+import { Container } from '@mui/material';
+import { formatCurrency } from '../helper';
 
 const defaultSize = 1;
 const defaultQuantity = 1;
@@ -32,10 +33,7 @@ export const Product = ({ onAddCart }) => {
 
   const getProductDetail = async (id) => {
     try {
-      const response = await fetch(`/api/products/${id}`, {
-        method: "GET",
-      });
-      const data = await response.json();
+      const data = await api.getProduct(id);
       setProduct(data);
     } catch (err) {
       console.log(err);
@@ -68,11 +66,11 @@ export const Product = ({ onAddCart }) => {
     <Container maxWidth="lg">
       <Box
         sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "center",
-          gap: "20px",
-          mt: "30px",
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          gap: '20px',
+          mt: '30px',
         }}
       >
         <ImageList
@@ -82,7 +80,7 @@ export const Product = ({ onAddCart }) => {
         >
           <ImageListItem key={product.product_main_image}>
             <img
-              style={{ borderRadius: "4px" }}
+              style={{ borderRadius: '4px' }}
               src={product.product_main_image}
               alt={`Image of ${product.product_name}`}
               loading="lazy"
@@ -90,7 +88,7 @@ export const Product = ({ onAddCart }) => {
           </ImageListItem>
           <ImageListItem key={product.product_extra_image}>
             <img
-              style={{ borderRadius: "4px" }}
+              style={{ borderRadius: '4px' }}
               src={product.product_extra_image}
               alt={`Image of ${product.product_name}`}
               loading="lazy"
@@ -99,9 +97,9 @@ export const Product = ({ onAddCart }) => {
         </ImageList>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
           }}
         >
           <Typography component="h1" variant="h3" color="inherit" gutterBottom>
@@ -166,7 +164,7 @@ export const Product = ({ onAddCart }) => {
             <Box
               component="form"
               sx={{
-                "& > :not(style)": { m: 1, width: "10ch" },
+                '& > :not(style)': { m: 1, width: '10ch' },
               }}
               noValidate
               autoComplete="off"
@@ -184,7 +182,7 @@ export const Product = ({ onAddCart }) => {
             <Button
               onClick={handleClick}
               variant="contained"
-              sx={{ marginRight: "10px" }}
+              sx={{ marginRight: '10px' }}
               disableElevation
             >
               Adicionar ao carrinho

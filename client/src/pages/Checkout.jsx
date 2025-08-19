@@ -1,22 +1,23 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import Paper from "@mui/material/Paper";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
-import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-import AddressForm from "../components/AddressForm";
-import Review from "../components/Review";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
+import Paper from '@mui/material/Paper';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import AddressForm from '../components/AddressForm';
+import Review from '../components/Review';
+import { api } from '../config/api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const steps = ["Dados do Cliente", "Revise e Finalize o Pedido"];
+const steps = ['Dados do Cliente', 'Revise e Finalize o Pedido'];
 
 export const Checkout = ({ cart, onSuccess }) => {
   const navigate = useNavigate();
@@ -25,14 +26,14 @@ export const Checkout = ({ cart, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [orderDetails, setOrderDetails] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
   });
 
   const saveOrder = async () => {
@@ -40,26 +41,22 @@ export const Checkout = ({ cart, onSuccess }) => {
       setLoading(true);
       const { firstName, lastName, email, phone, address, city, state, zip } =
         orderDetails;
-      const response = await fetch(`/api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: cart.map(({ id, size, quantity }) => {
-            return {
-              id,
-              size,
-              quantity,
-            };
-          }),
-          clientName: `${firstName} ${lastName}`,
-          clientEmail: email,
-          clientPhone: phone,
-          clientAddress: `${address}, ${city}, ${state}, ${zip}`,
+
+      const orderData = {
+        items: cart.map(({ id, size, quantity }) => {
+          return {
+            id,
+            size,
+            quantity,
+          };
         }),
-      });
-      const data = await response.json();
+        clientName: `${firstName} ${lastName}`,
+        clientEmail: email,
+        clientPhone: phone,
+        clientAddress: `${address}, ${city}, ${state}, ${zip}`,
+      };
+
+      const data = await api.createOrder(orderData);
       setOrderId(data.orderId);
       setSuccess(true);
       onSuccess();
@@ -68,6 +65,7 @@ export const Checkout = ({ cart, onSuccess }) => {
     } catch (err) {
       console.log(err);
       // set error
+      setLoading(false);
     }
   };
 
@@ -94,7 +92,7 @@ export const Checkout = ({ cart, onSuccess }) => {
 
   const isValidAddress = () => {
     const objectValues = Object.values(orderDetails);
-    return objectValues.every((input) => input !== "");
+    return objectValues.every((input) => input !== '');
   };
 
   return (
@@ -104,11 +102,11 @@ export const Checkout = ({ cart, onSuccess }) => {
         color="default"
         elevation={1}
         sx={{
-          position: "relative",
+          position: 'relative',
           borderBottom: (t) => `1px solid ${t.palette.divider}`,
         }}
       >
-        <Toolbar sx={{ justifyContent: "center" }}>
+        <Toolbar sx={{ justifyContent: 'center' }}>
           <Typography variant="h6" color="inherit" noWrap>
             Detalhes do Pedido
           </Typography>
@@ -117,7 +115,7 @@ export const Checkout = ({ cart, onSuccess }) => {
       <Container
         component="main"
         maxWidth="sm"
-        sx={{ mb: 4, justifyContent: "center" }}
+        sx={{ mb: 4, justifyContent: 'center' }}
       >
         {cart.length === 0 && success === false ? (
           <Container>
@@ -170,7 +168,7 @@ export const Checkout = ({ cart, onSuccess }) => {
                   <Review address={orderDetails} cart={cart} />
                 )}
                 {activeStep !== steps.length && (
-                  <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     {activeStep !== 0 && (
                       <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                         Voltar
@@ -184,8 +182,8 @@ export const Checkout = ({ cart, onSuccess }) => {
                       loading={loading}
                     >
                       {activeStep === steps.length - 1
-                        ? "Finalizar Pedido"
-                        : "Continuar"}
+                        ? 'Finalizar Pedido'
+                        : 'Continuar'}
                     </LoadingButton>
                   </Box>
                 )}
