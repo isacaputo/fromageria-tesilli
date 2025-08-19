@@ -1,107 +1,86 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const db = require("../model/helper");
-var userShouldBeLoggedIn = require("../guards/userShouldBeLoggedIn")
-const models = require("../models");
+const db = require('../model/helper');
+var userShouldBeLoggedIn = require('../guards/userShouldBeLoggedIn');
+const models = require('../models');
 
+router.get('/', async function (req, res) {
+  try {
+    const products = await models.Product.findAll();
+    res.send(products);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
-/* GET products list */
-// router.get("/", async function (req, res, next) {
-//   try {
-//     const result = await db(`SELECT * FROM products;`);
-//     res.send(result.data);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send(err);
-//   }
-// });
-
-// GET PRODUCTS LIST
-router.get('/', async function (req,res) {
- try {
-  const products = await models.Product.findAll();
-  res.send(products);
- } catch (error) {
-  res.status(500).send(error);
- }
-
-})
-
-
-router.get("/:id", async function (req, res, next) {
+router.get('/:id', async function (req, res, next) {
   const { id } = req.params;
   try {
     const product = await models.Product.findOne({
       where: {
         id,
-      }
+      },
     });
     res.send(product);
-  } catch(error) {
-    res.status(500).send({ message: error })
+  } catch (error) {
+    res.status(500).send({ message: error });
   }
-})
+});
 
 router.delete('/:id', userShouldBeLoggedIn, async function (req, res, next) {
   const { id } = req.params;
-  try { const product = await models.Product.findOne({
-    where: {
-      id,
-    },
-  });
+  try {
+    const product = await models.Product.findOne({
+      where: {
+        id,
+      },
+    });
 
-  if (!product) {
-    return res.status(404).send({ message: "Product not found" });
-  }
+    if (!product) {
+      return res.status(404).send({ message: 'Product not found' });
+    }
 
-  await product.destroy();
+    await product.destroy();
 
-  res.send({ message: "Product deleted successfully" });
-
-  } catch(error) {
+    res.send({ message: 'Product deleted successfully' });
+  } catch (error) {
     res.status(500).send({ message: error });
   }
-})
+});
 
- 
-
-router.post("/", userShouldBeLoggedIn, async function (req, res) {
-
+router.post('/', userShouldBeLoggedIn, async function (req, res) {
   const {
+    product_name,
+    product_description,
+    product_half_price,
+    product_whole_price,
+    product_half_weight,
+    product_whole_weight,
+    product_pairing,
+    product_slogan,
+    product_category,
+    product_main_image,
+    product_extra_image,
+  } = req.body;
+
+  try {
+    const product = await models.Product.create({
       product_name,
       product_description,
       product_half_price,
-      product_whole_price, 
+      product_whole_price,
       product_half_weight,
       product_whole_weight,
-      product_pairing, 
-      product_slogan, 
-      product_category, 
-      product_main_image, 
+      product_pairing,
+      product_slogan,
+      product_category,
+      product_main_image,
       product_extra_image,
-  } = req.body
-
-
-   try {
-    const product = await models.Product.create(
-    {
-      product_name,
-      product_description,
-      product_half_price,
-      product_whole_price, 
-      product_half_weight,
-      product_whole_weight,
-      product_pairing, 
-      product_slogan, 
-      product_category, 
-      product_main_image, 
-      product_extra_image,
-
     });
     res.send(product);
-   } catch(error) {
+  } catch (error) {
     res.status(500).send(error);
-   }
-})
+  }
+});
 
 module.exports = router;
