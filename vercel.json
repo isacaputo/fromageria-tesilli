@@ -6,7 +6,8 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
-      }
+      },
+      "buildCommand": "npm install vite && npm run build"
     },
     {
       "src": "api/**/*.js",
@@ -39,13 +40,8 @@
       "dest": "/api/orders/index.js"
     },
     {
-      "src": "/static/(.*)",
-      "dest": "/client/dist/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/client/dist/index.html"
     }
-  ],
-  "outputDirectory": "client/dist"
+  ]
 }
