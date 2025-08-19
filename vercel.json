@@ -39,8 +39,12 @@
       "dest": "/api/orders/index.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/client/dist/(.*)",
       "dest": "/client/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/dist/index.html"
     }
   ]
 }
