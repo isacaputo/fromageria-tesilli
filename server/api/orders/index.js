@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-const { transporter } = require('../../../nodemailer/message_transporter');
-const models = require('../../../models');
+const { transporter } = require('../utils/email');
+const { initDatabase, checkDatabaseConnection } = require('../utils/database');
 const { Op } = require('sequelize');
 
 module.exports = async (req, res) => {
@@ -22,6 +22,9 @@ module.exports = async (req, res) => {
   }
 
   try {
+    checkDatabaseConnection();
+    const { models } = initDatabase();
+
     if (req.method === 'GET') {
       // Note: You'll need to implement authentication middleware for Vercel
       const result = await models.Order.findAll({
@@ -103,8 +106,10 @@ module.exports = async (req, res) => {
     }
   } catch (error) {
     console.error('Error:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal server error', error: error.message });
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    });
   }
 };
