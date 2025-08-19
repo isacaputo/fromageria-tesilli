@@ -3,9 +3,25 @@ const { Sequelize, DataTypes } = require('sequelize');
 // Singleton pattern for database connection
 let sequelize;
 let models = {};
+let isInitialized = false;
 
-const initDatabase = async () => {
-  if (!sequelize) {
+// Force reset function for debugging
+const resetConnection = () => {
+  if (sequelize) {
+    sequelize.close();
+  }
+  sequelize = null;
+  models = {};
+  isInitialized = false;
+  console.log('Database connection reset');
+};
+
+const initDatabase = async (forceReset = false) => {
+  if (forceReset) {
+    resetConnection();
+  }
+
+  if (!sequelize || !isInitialized) {
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'mysql',
       dialectModule: require('mysql2'),
@@ -102,16 +118,41 @@ const initDatabase = async () => {
       { tableName: 'OrderHasProducts', timestamps: true }
     );
 
-    // Define associations
-    models.Product.belongsToMany(models.Order, {
-      through: models.OrderHasProduct,
-      foreignKey: 'product_id',
+    // Define associations - but avoid the problematic many-to-many for now
+    // We'll handle the relationships manually in queries instead
+    // models.Product.belongsToMany(models.Order, {
+    //   through: models.OrderHasProduct,
+    //   foreignKey: 'product_id',
+    // });
+
+    // models.Order.belongsToMany(models.Product, {
+    //   through: models.OrderHasProduct,
+    //   foreignKey: 'order_id',
+    // });
+
+    // Instead, use simpler belongsTo/hasMany associations
+    models.OrderHasProduct.belongsTo(models.Order, {
+      foreignKey: 'order_id',
+      as: 'Order',
     });
 
-    models.Order.belongsToMany(models.Product, {
-      through: models.OrderHasProduct,
-      foreignKey: 'order_id',
+    models.OrderHasProduct.belongsTo(models.Product, {
+      foreignKey: 'product_id',
+      as: 'Product',
     });
+
+    models.Order.hasMany(models.OrderHasProduct, {
+      foreignKey: 'order_id',
+      as: 'OrderProducts',
+    });
+
+    models.Product.hasMany(models.OrderHasProduct, {
+      foreignKey: 'product_id',
+      as: 'ProductOrders',
+    });
+
+    isInitialized = true;
+    console.log('Database models initialized');
   }
 
   return { sequelize, models };
@@ -136,10 +177,10 @@ const checkDatabaseConnection = async () => {
   }
 };
 
-const ensureConnection = async () => {
+const ensureConnection = async (forceReset = false) => {
   try {
     await checkDatabaseConnection();
-    const { models } = await initDatabase();
+    const { models } = await initDatabase(forceReset);
     return { models };
   } catch (error) {
     console.error('Database connection error:', error);
@@ -151,4 +192,5 @@ module.exports = {
   initDatabase,
   checkDatabaseConnection,
   ensureConnection,
+  resetConnection,
 };
