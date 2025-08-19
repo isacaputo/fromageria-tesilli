@@ -5,7 +5,6 @@ const models = require('../../models');
 const supersecret = process.env.SUPER_SECRET;
 
 module.exports = async (req, res) => {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
