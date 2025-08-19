@@ -1,4 +1,4 @@
-const models = require('../../../models');
+const { initDatabase, checkDatabaseConnection } = require('../utils/database');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -19,6 +19,9 @@ module.exports = async (req, res) => {
   }
 
   try {
+    checkDatabaseConnection();
+    const { models } = initDatabase();
+
     if (req.method === 'POST') {
       const {
         product_name,
@@ -54,8 +57,10 @@ module.exports = async (req, res) => {
     }
   } catch (error) {
     console.error('Error:', error);
-    res
-      .status(500)
-      .json({ message: 'Internal server error', error: error.message });
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    });
   }
 };
