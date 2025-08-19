@@ -1,4 +1,4 @@
-const models = require('../../models');
+const models = require('../../../models');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -18,37 +18,31 @@ module.exports = async (req, res) => {
     return;
   }
 
-  try {
-    if (req.method === 'POST') {
-      const {
-        product_name,
-        product_description,
-        product_half_price,
-        product_whole_price,
-        product_half_weight,
-        product_whole_weight,
-        product_pairing,
-        product_slogan,
-        product_category,
-        product_main_image,
-        product_extra_image,
-      } = req.body;
+  const { id } = req.query;
 
-      const product = await models.Product.create({
-        product_name,
-        product_description,
-        product_half_price,
-        product_whole_price,
-        product_half_weight,
-        product_whole_weight,
-        product_pairing,
-        product_slogan,
-        product_category,
-        product_main_image,
-        product_extra_image,
+  try {
+    if (req.method === 'GET') {
+      const product = await models.Product.findOne({
+        where: { id },
       });
 
-      res.status(201).json(product);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+
+      res.status(200).json(product);
+    } else if (req.method === 'DELETE') {
+      // Note: You'll need to implement authentication middleware for Vercel
+      const product = await models.Product.findOne({
+        where: { id },
+      });
+
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+
+      await product.destroy();
+      res.status(200).json({ message: 'Product deleted successfully' });
     } else {
       res.status(405).json({ message: 'Method not allowed' });
     }

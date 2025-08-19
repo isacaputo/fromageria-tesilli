@@ -1,9 +1,4 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const models = require('../../models');
-
-const saltRounds = 10;
-const supersecret = process.env.SUPER_SECRET;
+const models = require('../../../models');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -24,22 +19,16 @@ module.exports = async (req, res) => {
   }
 
   try {
-    if (req.method === 'POST') {
-      const { username, password } = req.body;
-
-      const hash = await bcrypt.hash(password, saltRounds);
-
-      const auth = await models.Auth.create({
-        username,
-        password: hash,
-      });
-
-      res.status(201).json({ message: 'Register successful' });
+    if (req.method === 'GET') {
+      const products = await models.Product.findAll();
+      res.status(200).json(products);
     } else {
       res.status(405).json({ message: 'Method not allowed' });
     }
   } catch (error) {
     console.error('Error:', error);
-    res.status(400).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: 'Internal server error', error: error.message });
   }
 };

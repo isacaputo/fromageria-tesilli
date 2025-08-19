@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-const { transporter } = require('../../nodemailer/message_transporter');
-const models = require('../../models');
+const { transporter } = require('../../../nodemailer/message_transporter');
+const models = require('../../../models');
 const { Op } = require('sequelize');
 
 module.exports = async (req, res) => {

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const models = require('../../models');
+const models = require('../../../models');
 
 const supersecret = process.env.SUPER_SECRET;
 
