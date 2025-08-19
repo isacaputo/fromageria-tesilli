@@ -20,21 +20,29 @@ module.exports = async (req, res) => {
 
   const { id } = req.query;
 
+  console.log('Product ID requested:', id);
+  console.log('Request method:', req.method);
+
   try {
     const { models } = await ensureConnection();
+    console.log('Database connection established');
 
     if (req.method === 'GET') {
+      console.log('Searching for product with ID:', id);
       const product = await models.Product.findOne({
         where: { id },
       });
 
+      console.log('Product found:', !!product);
+
       if (!product) {
+        console.log('Product not found for ID:', id);
         return res.status(404).json({ message: 'Product not found' });
       }
 
+      console.log('Returning product:', product.product_name);
       res.status(200).json(product);
     } else if (req.method === 'DELETE') {
-      // Note: You'll need to implement authentication middleware for Vercel
       const product = await models.Product.findOne({
         where: { id },
       });
