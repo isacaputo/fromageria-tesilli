@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
 module.exports = async (req, res) => {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -18,13 +17,11 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Initialize Sequelize
   const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'mysql',
+    dialect: 'mysql2',
     logging: false,
   });
 
-  // Define Product model
   const Product = sequelize.define(
     'Product',
     {
@@ -32,9 +29,8 @@ module.exports = async (req, res) => {
       name: DataTypes.STRING,
       price: DataTypes.FLOAT,
       description: DataTypes.TEXT,
-      // add other fields from your Product model
     },
-    { tableName: 'Products', timestamps: false } // adjust if you have timestamps
+    { tableName: 'Products', timestamps: false }
   );
 
   try {
@@ -50,6 +46,6 @@ module.exports = async (req, res) => {
       .status(500)
       .json({ message: 'Internal server error', error: error.message });
   } finally {
-    await sequelize.close(); // close connection for serverless
+    await sequelize.close();
   }
 };
