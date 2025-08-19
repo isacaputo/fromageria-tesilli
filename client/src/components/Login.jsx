@@ -1,18 +1,17 @@
-import { useState, useContext } from "react";
-import axios from "axios";
-import { Button, Typography } from "@mui/material";
-import AuthContext from "../contexts/AuthContext";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { useState, useContext } from 'react';
+import { Button, Typography } from '@mui/material';
+import AuthContext from '../contexts/AuthContext';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { api } from '../config/api';
 
 function Login() {
-  // auth is an object that contains user, login and logout
   const auth = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
 
   const { username, password } = credentials;
@@ -24,13 +23,10 @@ function Login() {
 
   const login = async () => {
     try {
-      const { data } = await axios("/api/auth/login", {
-        method: "POST",
-        data: credentials,
-      });
+      const { data } = await api.login(credentials);
 
       // Stores the token locally
-      localStorage.setItem("token", data.token);
+      localStorage.setItem('token', data.token);
       auth.login();
     } catch (error) {
       console.log(error);
@@ -39,7 +35,7 @@ function Login() {
 
   const logout = () => {
     auth.logout();
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
   };
 
   return (
