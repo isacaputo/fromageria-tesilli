@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { api } from '../config/api';
 
 export const ProductList = ({ onAddCart }) => {
   const [products, setProducts] = useState([]);
@@ -15,10 +16,7 @@ export const ProductList = ({ onAddCart }) => {
 
   const getProducts = async () => {
     try {
-      const response = await fetch(`/api/products`, {
-        method: 'GET',
-      });
-      const data = await response.json();
+      const data = await api.getProducts();
       setProducts(data);
     } catch (err) {
       console.log(err);
