@@ -1,4 +1,4 @@
-const { initDatabase, checkDatabaseConnection } = require('../utils/database');
+const { ensureConnection } = require('../utils/database');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -19,8 +19,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    checkDatabaseConnection();
-    const { models } = initDatabase();
+    const { models } = await ensureConnection();
 
     if (req.method === 'GET') {
       const products = await models.Product.findAll();

@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const { transporter } = require('../utils/email');
-const { initDatabase, checkDatabaseConnection } = require('../utils/database');
+const { ensureConnection } = require('../utils/database');
 const { Op } = require('sequelize');
 
 module.exports = async (req, res) => {
@@ -22,8 +22,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    checkDatabaseConnection();
-    const { models } = initDatabase();
+    const { models } = await ensureConnection();
 
     if (req.method === 'GET') {
       // Note: You'll need to implement authentication middleware for Vercel
