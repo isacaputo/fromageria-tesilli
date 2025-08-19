@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "migrate": "npx sequelize-cli db:migrate",
-    "seed": "npx sequelize-cli db:seed:all"
+    "seed": "npx sequelize-cli db:seed:all",
+    "vercel-build": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "axios": "^1.4.0",
