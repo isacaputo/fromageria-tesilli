@@ -4,19 +4,44 @@ const { Sequelize, DataTypes } = require('sequelize');
 let sequelize;
 let models = {};
 
-const initDatabase = () => {
+const initDatabase = async () => {
   if (!sequelize) {
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'mysql',
       dialectModule: require('mysql2'),
       logging: false,
       pool: {
-        max: 2,
+        max: 5,
         min: 0,
-        acquire: 30000,
+        acquire: 60000,
         idle: 10000,
       },
+      dialectOptions: {
+        connectTimeout: 60000,
+        acquireTimeout: 60000,
+        timeout: 60000,
+      },
+      retry: {
+        match: [
+          /ETIMEDOUT/,
+          /EHOSTUNREACH/,
+          /ECONNRESET/,
+          /ECONNREFUSED/,
+          /ENOTFOUND/,
+          /EAI_AGAIN/,
+        ],
+        max: 3,
+      },
     });
+
+    // Test the connection
+    try {
+      await sequelize.authenticate();
+      console.log('Database connection established successfully.');
+    } catch (error) {
+      console.error('Unable to connect to the database:', error);
+      throw new Error(`Database connection failed: ${error.message}`);
+    }
 
     // Define Product model
     models.Product = sequelize.define(
@@ -92,13 +117,38 @@ const initDatabase = () => {
   return { sequelize, models };
 };
 
-const checkDatabaseConnection = () => {
+const checkDatabaseConnection = async () => {
   if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL environment variable is not set');
+  }
+
+  // If sequelize exists, test the connection
+  if (sequelize) {
+    try {
+      await sequelize.authenticate();
+    } catch (error) {
+      console.error('Database connection test failed:', error);
+      // Reset the connection if it's dead
+      sequelize = null;
+      models = {};
+      throw new Error(`Database connection lost: ${error.message}`);
+    }
+  }
+};
+
+const ensureConnection = async () => {
+  try {
+    await checkDatabaseConnection();
+    const { models } = await initDatabase();
+    return { models };
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw error;
   }
 };
 
 module.exports = {
   initDatabase,
   checkDatabaseConnection,
+  ensureConnection,
 };
