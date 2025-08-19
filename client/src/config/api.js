@@ -61,9 +61,9 @@ export const api = {
   getProducts: () =>
     fetch(`${API_BASE_URL}/api/products`).then((res) => res.json()),
   getProduct: (id) =>
-    fetch(`${API_BASE_URL}/api/products/${id}`).then((res) => res.json()),
+    fetch(`${API_BASE_URL}/api/products?id=${id}`).then((res) => res.json()),
   createProduct: (data) => axios.post('/api/products/create', data),
-  deleteProduct: (id) => axios.delete(`/api/products/${id}`),
+  deleteProduct: (id) => axios.delete(`/api/products?id=${id}`),
 
   // Auth
   login: (credentials) => axios.post('/api/auth/login', credentials),
