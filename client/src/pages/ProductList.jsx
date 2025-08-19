@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
-import { formatCurrency } from '../helper';
-import { Link } from 'react-router-dom';
-import { api } from '../config/api';
+import React, { useEffect, useState } from 'react';
+import ProductCard from '../components/ProductCard';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 
-export function ProductList() {
+export const ProductList = ({ onAddCart }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -13,7 +15,10 @@ export function ProductList() {
 
   const getProducts = async () => {
     try {
-      const data = await api.getProducts();
+      const response = await fetch(`/api/products`, {
+        method: 'GET',
+      });
+      const data = await response.json();
       setProducts(data);
     } catch (err) {
       console.log(err);
@@ -21,66 +26,59 @@ export function ProductList() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 2 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Our Cheese Selection
-      </Typography>
-      <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card
-              sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-            >
-              <CardMedia
-                component="img"
-                height="200"
-                image={`/images/cheese_pictures/${product.name}/${product.name}1.png`}
-                alt={product.name}
-                sx={{ objectFit: 'cover' }}
+    <main>
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          pt: 8,
+        }}
+      >
+        <Container sx={{ justifyContent: 'center' }} maxWidth="md">
+          <Typography
+            component="h1"
+            variant="h2"
+            align="center"
+            color="text.primary"
+            gutterBottom
+            sx={{ fontFamily: 'Oooh Baby', fontSize: 80 }}
+          >
+            Fromageria Tesilli
+          </Typography>
+          <Typography
+            variant="h6"
+            align="center"
+            color="text.secondary"
+            paragraph
+            sx={{ justifyContent: 'center' }}
+          >
+            Produzimos <strong>queijos artesanais maturados</strong>{' '}
+            cuidadosamente elaborados, combinando ingredientes deliciosos com
+            pinceladas de criatividade.
+          </Typography>
+          <Stack
+            sx={{ pt: 4 }}
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+          ></Stack>
+        </Container>
+      </Box>
+      <Container sx={{ py: 8 }} maxWidth="lg">
+        <Grid container spacing={4}>
+          {products.map((product) => (
+            <Grid item key={product.id} xs={12} sm={6} md={4}>
+              <ProductCard
+                price={product.product_whole_price}
+                name={product.product_name}
+                id={product.id}
+                description={product.product_description}
+                image={product.product_main_image}
+                onAddCart={onAddCart}
               />
-              <Box
-                sx={{
-                  p: 2,
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Typography gutterBottom variant="h5" component="div">
-                  {product.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ flexGrow: 1 }}
-                >
-                  {product.description}
-                </Typography>
-                <Box
-                  sx={{
-                    mt: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography variant="h6" color="primary">
-                    {formatCurrency(product.price)}
-                  </Typography>
-                  <Button
-                    component={Link}
-                    to={`/product/${product.id}`}
-                    variant="contained"
-                    color="primary"
-                  >
-                    View Details
-                  </Button>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </main>
   );
-}
+};
