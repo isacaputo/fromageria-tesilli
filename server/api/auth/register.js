@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const models = require('../../../models');
+const { initDatabase, checkDatabaseConnection } = require('../utils/database');
 
 const saltRounds = 10;
 const supersecret = process.env.SUPER_SECRET;
@@ -24,6 +24,9 @@ module.exports = async (req, res) => {
   }
 
   try {
+    checkDatabaseConnection();
+    const { models } = initDatabase();
+
     if (req.method === 'POST') {
       const { username, password } = req.body;
 
