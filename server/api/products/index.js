@@ -22,8 +22,25 @@ module.exports = async (req, res) => {
     const { models } = await ensureConnection();
 
     if (req.method === 'GET') {
-      const products = await models.Product.findAll();
-      res.status(200).json(products);
+      const { id } = req.query;
+
+      if (id) {
+        // Get specific product by ID
+        console.log('Getting product with ID:', id);
+        const product = await models.Product.findOne({
+          where: { id },
+        });
+
+        if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(product);
+      } else {
+        // Get all products
+        const products = await models.Product.findAll();
+        res.status(200).json(products);
+      }
     } else {
       res.status(405).json({ message: 'Method not allowed' });
     }
