@@ -96,8 +96,8 @@ const initDatabase = async () => {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         order_id: DataTypes.INTEGER,
         product_id: DataTypes.INTEGER,
-        quantity: DataTypes.INTEGER,
-        price_at_time: DataTypes.FLOAT,
+        size: DataTypes.FLOAT,
+        quantity: DataTypes.FLOAT,
       },
       { tableName: 'OrderHasProducts', timestamps: true }
     );

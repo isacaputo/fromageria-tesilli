@@ -27,7 +27,12 @@ module.exports = async (req, res) => {
     if (req.method === 'GET') {
       // Note: You'll need to implement authentication middleware for Vercel
       const result = await models.Order.findAll({
-        include: models.Product,
+        include: {
+          model: models.Product,
+          through: {
+            attributes: ['size', 'quantity'], // Only include existing columns
+          },
+        },
       });
       res.status(200).json(result);
     } else if (req.method === 'POST') {
@@ -71,7 +76,7 @@ module.exports = async (req, res) => {
 
       const ordersResponse = await models.Order.findOne({
         attributes: ['id'],
-        order: [['date', 'DESC']],
+        order: [['createdAt', 'DESC']],
       });
 
       const orderId = ordersResponse.dataValues.id;
