@@ -1,5 +1,24 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'mysql',
+  logging: false,
+  dialectOptions: {
+    ssl: { rejectUnauthorized: true },
+  },
+});
+
+const Product = sequelize.define(
+  'Product',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: DataTypes.STRING,
+    price: DataTypes.FLOAT,
+    description: DataTypes.TEXT,
+  },
+  { tableName: 'Products', timestamps: false }
+);
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,22 +35,6 @@ module.exports = async (req, res) => {
     res.status(200).end();
     return;
   }
-
-  const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'mysql2',
-    logging: false,
-  });
-
-  const Product = sequelize.define(
-    'Product',
-    {
-      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      name: DataTypes.STRING,
-      price: DataTypes.FLOAT,
-      description: DataTypes.TEXT,
-    },
-    { tableName: 'Products', timestamps: false }
-  );
 
   try {
     if (req.method === 'GET') {
