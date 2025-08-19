@@ -1,4 +1,4 @@
-const models = require('../../../models');
+const { Sequelize, DataTypes } = require('sequelize');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -18,9 +18,28 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Initialize Sequelize
+  const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'mysql',
+    logging: false,
+  });
+
+  // Define Product model
+  const Product = sequelize.define(
+    'Product',
+    {
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      name: DataTypes.STRING,
+      price: DataTypes.FLOAT,
+      description: DataTypes.TEXT,
+      // add other fields from your Product model
+    },
+    { tableName: 'Products', timestamps: false } // adjust if you have timestamps
+  );
+
   try {
     if (req.method === 'GET') {
-      const products = await models.Product.findAll();
+      const products = await Product.findAll();
       res.status(200).json(products);
     } else {
       res.status(405).json({ message: 'Method not allowed' });
@@ -30,5 +49,7 @@ module.exports = async (req, res) => {
     res
       .status(500)
       .json({ message: 'Internal server error', error: error.message });
+  } finally {
+    await sequelize.close(); // close connection for serverless
   }
 };
