@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   Badge,
@@ -46,6 +46,20 @@ export function Layout({
   onOpenCart,
 }) {
   const navigate = useNavigate();
+
+  // Preload critical images on app start
+  useEffect(() => {
+    const imagesToPreload = [
+      '/images/Home.jpg',
+      '/images/Home-medium.jpg',
+      '/images/Home-small.jpg',
+    ];
+
+    imagesToPreload.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   const subtotal = cart.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
