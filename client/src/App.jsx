@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
-import "./App.css";
-import { Home } from "./pages/Home";
-import { Layout } from "./components/Layout";
-import { ProductList } from "./pages/ProductList";
-import { Product } from "./pages/Product";
-import { Checkout } from "./pages/Checkout";
-import Admin from "./pages/Admin";
-import Orders from "./pages/Orders";
-import EditProducts from "./pages/EditProducts";
-import AuthContext from "./contexts/AuthContext";
-import RequireAuth from "./components/RequireAuth";
+import { useState, useEffect } from 'react';
+import { Routes, Route, Outlet, Link } from 'react-router-dom';
+import './App.css';
+import { Home } from './pages/Home';
+import { Layout } from './components/Layout';
+import { ProductList } from './pages/ProductList';
+import { Product } from './pages/Product';
+import { Checkout } from './pages/Checkout';
+import Admin from './pages/Admin';
+import Orders from './pages/Orders';
+import EditProducts from './pages/EditProducts';
+import AuthContext from './contexts/AuthContext';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -27,7 +27,6 @@ function App() {
   };
 
   const handleAddCart = (item) => {
-    console.log(item);
     const existingIndexItem = cart.findIndex(
       (value) => value.id === item.id && value.size === item.size
     );
@@ -56,7 +55,6 @@ function App() {
   // Handling Login and Logout
   function login(username, password) {
     setUser(true);
-    console.log("login");
   }
   function logout() {
     setUser(false);
