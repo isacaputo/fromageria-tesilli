@@ -25,6 +25,8 @@ export const Product = ({ onAddCart }) => {
   const [product, setProduct] = useState({});
   const [size, setSize] = useState(defaultSize);
   const [quantity, setQuantity] = useState(defaultQuantity);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,10 +35,16 @@ export const Product = ({ onAddCart }) => {
 
   const getProductDetail = async (id) => {
     try {
+      setLoading(true);
+      setError(null);
       const data = await api.getProduct(id);
-      setProduct(data);
+      setProduct(data || {});
     } catch (err) {
-      console.log(err);
+      console.error('Failed to fetch product:', err);
+      setError('Failed to load product details. Please try again later.');
+      setProduct({});
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,133 +72,170 @@ export const Product = ({ onAddCart }) => {
 
   return (
     <Container maxWidth="lg">
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          gap: '20px',
-          mt: '30px',
-        }}
-      >
-        <ImageList
-          sx={{ width: 450, height: 750, margin: 0 }}
-          cols={1}
-          rowHeight={2}
-        >
-          <ImageListItem key={product.product_main_image}>
-            <img
-              style={{ borderRadius: '4px' }}
-              src={product.product_main_image}
-              alt={`Image of ${product.product_name}`}
-              loading="lazy"
-            />
-          </ImageListItem>
-          <ImageListItem key={product.product_extra_image}>
-            <img
-              style={{ borderRadius: '4px' }}
-              src={product.product_extra_image}
-              alt={`Image of ${product.product_name}`}
-              loading="lazy"
-            />
-          </ImageListItem>
-        </ImageList>
+      {loading && (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6">Loading product details...</Typography>
+        </Box>
+      )}
+
+      {error && (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="error">
+            {error}
+          </Typography>
+          <Button
+            onClick={() => getProductDetail(id)}
+            variant="contained"
+            sx={{ mt: 2 }}
+          >
+            Try Again
+          </Button>
+        </Box>
+      )}
+
+      {!loading && !error && Object.keys(product).length > 0 && (
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'flex-start',
+            justifyContent: 'center',
+            gap: '20px',
+            mt: '30px',
           }}
         >
-          <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-            {product.product_name}
-          </Typography>
-          <Typography variant="h6" color="inherit" paragraph>
-            {product.product_description}
-          </Typography>
-          <Typography
-            variant="h7"
-            color="inherit"
-            paragraph
-            sx={{ width: 450 }}
+          <ImageList
+            sx={{ width: 450, height: 750, margin: 0 }}
+            cols={1}
+            rowHeight={2}
           >
-            {product.product_slogan}
-          </Typography>
-          <br />
-          <Card sx={{ maxWidth: 300 }}>
-            <CardContent>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Metade do Queijo
-              </Typography>
-              <Typography>
-                <strong>{formatCurrency(product.product_half_price)}</strong>
-              </Typography>
-              <hr />
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                Queijo Inteiro
-              </Typography>
-              <Typography>
-                <strong>{formatCurrency(product.product_whole_price)}</strong>
-              </Typography>
-            </CardContent>
-          </Card>
-          <br />
-          <Box>
-            <FormControl sx={{ m: 1, minWidth: 150 }}>
-              <InputLabel id="demo-simple-select-helper-label">
-                Tamanho
-              </InputLabel>
-              <Select
-                sx={{ maxWidth: 200 }}
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={size}
-                label="Tamanho"
-                size="small"
-                onChange={handleSelection}
-              >
-                <MenuItem value={0.5}>Metade (160 - 230g)</MenuItem>
-                <MenuItem value={1}>Inteiro (320 - 460g)</MenuItem>
-              </Select>
-            </FormControl>
-            <Box
-              component="form"
-              sx={{
-                '& > :not(style)': { m: 1, width: '10ch' },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                label="Qtd"
-                type="number"
-                size="small"
-                inputProps={{ min: 1 }}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
+            <ImageListItem key={product.product_main_image}>
+              <img
+                style={{ borderRadius: '4px' }}
+                src={product.product_main_image}
+                alt={`Image of ${product.product_name}`}
+                loading="lazy"
               />
-            </Box>
-            <br />
-            <Button
-              onClick={handleClick}
-              variant="contained"
-              sx={{ marginRight: '10px' }}
-              disableElevation
+            </ImageListItem>
+            <ImageListItem key={product.product_extra_image}>
+              <img
+                style={{ borderRadius: '4px' }}
+                src={product.product_extra_image}
+                alt={`Image of ${product.product_name}`}
+                loading="lazy"
+              />
+            </ImageListItem>
+          </ImageList>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+            }}
+          >
+            <Typography
+              component="h1"
+              variant="h3"
+              color="inherit"
+              gutterBottom
             >
-              Adicionar ao carrinho
-            </Button>
-            <Button onClick={handleGoBack}>Voltar</Button>
+              {product.product_name}
+            </Typography>
+            <Typography variant="h6" color="inherit" paragraph>
+              {product.product_description}
+            </Typography>
+            <Typography
+              variant="h7"
+              color="inherit"
+              paragraph
+              sx={{ width: 450 }}
+            >
+              {product.product_slogan}
+            </Typography>
+            <br />
+            <Card sx={{ maxWidth: 300 }}>
+              <CardContent>
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Metade do Queijo
+                </Typography>
+                <Typography>
+                  <strong>{formatCurrency(product.product_half_price)}</strong>
+                </Typography>
+                <hr />
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Queijo Inteiro
+                </Typography>
+                <Typography>
+                  <strong>{formatCurrency(product.product_whole_price)}</strong>
+                </Typography>
+              </CardContent>
+            </Card>
+            <br />
+            <Box>
+              <FormControl sx={{ m: 1, minWidth: 150 }}>
+                <InputLabel id="demo-simple-select-helper-label">
+                  Tamanho
+                </InputLabel>
+                <Select
+                  sx={{ maxWidth: 200 }}
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={size}
+                  label="Tamanho"
+                  size="small"
+                  onChange={handleSelection}
+                >
+                  <MenuItem value={0.5}>Metade (160 - 230g)</MenuItem>
+                  <MenuItem value={1}>Inteiro (320 - 460g)</MenuItem>
+                </Select>
+              </FormControl>
+              <Box
+                component="form"
+                sx={{
+                  '& > :not(style)': { m: 1, width: '10ch' },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  label="Qtd"
+                  type="number"
+                  size="small"
+                  inputProps={{ min: 1 }}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                />
+              </Box>
+              <br />
+              <Button
+                onClick={handleClick}
+                variant="contained"
+                sx={{ marginRight: '10px' }}
+                disableElevation
+              >
+                Adicionar ao carrinho
+              </Button>
+              <Button onClick={handleGoBack}>Voltar</Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
+
+      {!loading && !error && Object.keys(product).length === 0 && (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6">Product not found.</Typography>
+          <Button onClick={handleGoBack} variant="contained" sx={{ mt: 2 }}>
+            Back to Products
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };
