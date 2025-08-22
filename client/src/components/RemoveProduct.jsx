@@ -16,9 +16,10 @@ export default function RemoveProduct() {
   const getProducts = async () => {
     try {
       const data = await api.getProducts();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.log(err);
+      console.error('Failed to fetch products:', err);
+      setProducts([]);
     }
   };
 
@@ -78,10 +79,14 @@ export default function RemoveProduct() {
 
           <Grid item xs={8}>
             <Select
-              options={products.map((product) => ({
-                value: product.id,
-                label: product.product_name,
-              }))}
+              options={
+                Array.isArray(products)
+                  ? products.map((product) => ({
+                      value: product.id,
+                      label: product.product_name,
+                    }))
+                  : []
+              }
               value={selectedProduct}
               onChange={handleProductChange}
               styles={customStyles}
