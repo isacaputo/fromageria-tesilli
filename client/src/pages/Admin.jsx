@@ -1,9 +1,9 @@
-import { AppBar, Toolbar, Typography, Link, Container } from "@mui/material";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import Login from "../components/Login";
-import { useContext } from "react";
-import AuthContext from "../contexts/AuthContext";
+import { AppBar, Toolbar, Typography, Link, Container } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Login from '../components/Login';
+import { useContext } from 'react';
+import AuthContext from '../contexts/AuthContext';
 
 export default function Admin() {
   const auth = useContext(AuthContext);
@@ -12,7 +12,7 @@ export default function Admin() {
   return (
     <>
       <AppBar>
-        <Toolbar sx={{ flexWrap: "wrap" }}>
+        <Toolbar sx={{ flexWrap: 'wrap' }}>
           <Typography
             variant="h6"
             color="inherit"
@@ -21,7 +21,7 @@ export default function Admin() {
           >
             <Link
               href="#"
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/')}
               color="inherit"
               underline="none"
             >
@@ -44,7 +44,8 @@ export default function Admin() {
               color="neutral.contrastText"
               sx={{ my: 1, mx: 1.5 }}
               href="#"
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/')}
+              underline="none"
             >
               Back to Shop
             </Link>
@@ -55,7 +56,7 @@ export default function Admin() {
                 color="neutral.contrastText"
                 sx={{ my: 1, mx: 1.5 }}
                 href="#"
-                onClick={() => navigate("/orders")}
+                onClick={() => navigate('/orders')}
               >
                 View Orders
               </Link>
@@ -67,7 +68,7 @@ export default function Admin() {
                 color="neutral.contrastText"
                 sx={{ my: 1, mx: 1.5 }}
                 href="#"
-                onClick={() => navigate("/editproducts")}
+                onClick={() => navigate('/editproducts')}
               >
                 Edit products
               </Link>
@@ -79,7 +80,7 @@ export default function Admin() {
       <Container
         maxWidth="sm"
         sx={{
-          padding: "16px",
+          padding: '16px',
           mt: 30,
           mb: 4,
         }}
