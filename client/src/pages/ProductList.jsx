@@ -9,6 +9,8 @@ import { api } from '../config/api';
 
 export const ProductList = ({ onAddCart }) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getProducts();
@@ -16,10 +18,16 @@ export const ProductList = ({ onAddCart }) => {
 
   const getProducts = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const data = await api.getProducts();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.log(err);
+      console.error('Failed to fetch products:', err);
+      setError('Failed to load products. Please try again later.');
+      setProducts([]); // Ensure products is always an array
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,20 +70,40 @@ export const ProductList = ({ onAddCart }) => {
         </Container>
       </Box>
       <Container sx={{ py: 8 }} maxWidth="lg">
-        <Grid container spacing={4}>
-          {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <ProductCard
-                price={product.product_whole_price}
-                name={product.product_name}
-                id={product.id}
-                description={product.product_description}
-                image={product.product_main_image}
-                onAddCart={onAddCart}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {loading && (
+          <Typography align="center" variant="h6">
+            Loading products...
+          </Typography>
+        )}
+        {error && (
+          <Typography align="center" variant="h6" color="error">
+            {error}
+          </Typography>
+        )}
+        {!loading && !error && (
+          <Grid container spacing={4}>
+            {Array.isArray(products) &&
+              products.map((product) => (
+                <Grid item key={product.id} xs={12} sm={6} md={4}>
+                  <ProductCard
+                    price={product.product_whole_price}
+                    name={product.product_name}
+                    id={product.id}
+                    description={product.product_description}
+                    image={product.product_main_image}
+                    onAddCart={onAddCart}
+                  />
+                </Grid>
+              ))}
+            {Array.isArray(products) && products.length === 0 && (
+              <Grid item xs={12}>
+                <Typography align="center" variant="h6">
+                  No products available.
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        )}
       </Container>
     </main>
   );
