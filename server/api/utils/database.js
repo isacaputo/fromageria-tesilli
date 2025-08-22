@@ -22,20 +22,32 @@ const initDatabase = async (forceReset = false) => {
   }
 
   if (!sequelize || !isInitialized) {
+    console.log('Initializing database connection...');
+
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is not set');
+    }
+
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'mysql',
       dialectModule: require('mysql2'),
-      logging: false,
+      logging: false, // Disable logging in production to reduce overhead
       pool: {
-        max: 5,
+        max: 1, // Use single connection for serverless
         min: 0,
-        acquire: 60000,
-        idle: 10000,
+        acquire: 20000, // Shorter timeout for faster failure
+        idle: 1000, // Very short idle time
+        evict: 1000, // Evict connections quickly
       },
       dialectOptions: {
-        connectTimeout: 60000,
-        acquireTimeout: 60000,
-        timeout: 60000,
+        connectTimeout: 20000,
+        acquireTimeout: 20000,
+        timeout: 20000,
+        // Add SSL config if needed
+        ssl:
+          process.env.NODE_ENV === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
       },
       retry: {
         match: [
@@ -46,16 +58,26 @@ const initDatabase = async (forceReset = false) => {
           /ENOTFOUND/,
           /EAI_AGAIN/,
         ],
-        max: 3,
+        max: 2, // Reduce retries for faster failure
       },
     });
 
-    // Test the connection
+    // Test the connection with timeout
     try {
-      await sequelize.authenticate();
+      console.log('Testing database authentication...');
+      await Promise.race([
+        sequelize.authenticate(),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Database authentication timeout')),
+            15000
+          )
+        ),
+      ]);
       console.log('Database connection established successfully.');
     } catch (error) {
       console.error('Unable to connect to the database:', error);
+      resetConnection(); // Clean up on failure
       throw new Error(`Database connection failed: ${error.message}`);
     }
 
@@ -165,16 +187,33 @@ const checkDatabaseConnection = async () => {
 };
 
 const ensureConnection = async (forceReset = false) => {
+  const startTime = Date.now();
+
   try {
+    console.log('Ensuring database connection...');
+
+    // Don't force reset on every request in serverless - let connections persist between requests
+    if (forceReset) {
+      resetConnection();
+    }
+
     await checkDatabaseConnection();
     const { models } = await initDatabase(forceReset);
+
+    const duration = Date.now() - startTime;
+    console.log(`Database connection established in ${duration}ms`);
+
     return { models };
   } catch (error) {
-    console.error('Database connection error:', error);
+    const duration = Date.now() - startTime;
+    console.error(`Database connection failed after ${duration}ms:`, error);
+    console.error('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+
+    // Clean up on failure
+    resetConnection();
     throw error;
   }
 };
-
 module.exports = {
   initDatabase,
   checkDatabaseConnection,
