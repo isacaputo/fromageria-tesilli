@@ -1,7 +1,7 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
-import { Paper, Box, Grid, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import * as React from 'react';
+import Container from '@mui/material/Container';
+import { Paper, Box, Grid, Typography, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export function Home() {
   const navigate = useNavigate();
@@ -9,35 +9,34 @@ export function Home() {
   return (
     <Paper
       sx={{
-        position: "relative",
-        color: "#fff",
-        mb: 4,
+        position: 'relative',
+        color: '#fff',
         borderRadius: 0,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
         backgroundImage: `url("/images/Home.png")`,
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         height: 750,
       }}
     >
-      <img style={{ display: "none" }} src="/images/Home.png" />
-      <Grid container sx={{ justifyContent: "center", textAlign: "center" }}>
+      <img style={{ display: 'none' }} src="/images/Home.png" />
+      <Grid container sx={{ justifyContent: 'center', textAlign: 'center' }}>
         <Box
           sx={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             bottom: 0,
             right: 0,
             left: 0,
-            backgroundColor: "rgba(0,0,0,.45)",
+            backgroundColor: 'rgba(0,0,0,.45)',
           }}
         />
         <Grid item md={6}>
           <Box
             sx={{
-              position: "relative",
+              position: 'relative',
               p: { xs: 3, md: 6 },
             }}
           >
@@ -46,7 +45,7 @@ export function Home() {
               variant="h3"
               color="inherit"
               gutterBottom
-              sx={{ fontFamily: "Oooh Baby", fontSize: 80 }}
+              sx={{ fontFamily: 'Oooh Baby', fontSize: 80 }}
             >
               Fromageria Tesilli
             </Typography>
@@ -55,12 +54,12 @@ export function Home() {
               variant="h3"
               color="inherit"
               gutterBottom
-              sx={{ fontFamily: "Verdana", fontSize: 20 }}
+              sx={{ fontFamily: 'Verdana', fontSize: 20 }}
             >
               Queijos • Sabores • Afetos
             </Typography>
             <br />
-            <Button variant="contained" onClick={() => navigate("/products")}>
+            <Button variant="contained" onClick={() => navigate('/products')}>
               Conheça nossos queijos
             </Button>
           </Box>
