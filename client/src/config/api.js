@@ -58,8 +58,36 @@ if (import.meta.env.DEV) {
 // API helper functions
 export const api = {
   // Products
-  getProducts: () =>
-    fetch(`${API_BASE_URL}/api/products`).then((res) => res.json()),
+  getProducts: async (retryCount = 0) => {
+    const maxRetries = 2;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error(`API request failed (attempt ${retryCount + 1}):`, error);
+
+      // Retry on failure, especially for cold start issues
+      if (
+        retryCount < maxRetries &&
+        (error.message.includes('500') ||
+          error.message.includes('timeout') ||
+          error.message.includes('network'))
+      ) {
+        console.log(`Retrying request in ${(retryCount + 1) * 1000}ms...`);
+        await new Promise((resolve) =>
+          setTimeout(resolve, (retryCount + 1) * 1000)
+        );
+        return api.getProducts(retryCount + 1);
+      }
+
+      throw error;
+    }
+  },
   getProduct: (id) =>
     fetch(`${API_BASE_URL}/api/products?id=${id}`).then((res) => res.json()),
   createProduct: (data) => axios.post('/api/products/create', data),
@@ -81,6 +109,15 @@ export const api = {
 
   getOrders: () =>
     fetch(`${API_BASE_URL}/api/orders`).then((res) => res.json()),
+
+  // Health check endpoint
+  healthCheck: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/test`);
+    if (!response.ok) {
+      throw new Error(`Health check failed! status: ${response.status}`);
+    }
+    return response.json();
+  },
 };
 
 export { API_BASE_URL };
