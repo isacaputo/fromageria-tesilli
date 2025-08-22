@@ -19,14 +19,11 @@ export default function Admin() {
             noWrap
             sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
           >
-            <Link
-              href="#"
-              onClick={() => navigate('/')}
-              color="inherit"
-              underline="none"
-            >
-              FROMAGERIA TESILLI
-            </Link>
+            <img
+              src="/images/logo_fromageria.png"
+              alt="Fromageria Logo"
+              width="48"
+            />
           </Typography>
 
           <Typography
