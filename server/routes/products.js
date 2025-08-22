@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../server/model/helper');
-var userShouldBeLoggedIn = require('../server/guards/userShouldBeLoggedIn');
-const models = require('../server/models');
+const db = require('../model/helper');
+var userShouldBeLoggedIn = require('../guards/userShouldBeLoggedIn');
+const models = require('../models');
 
 router.get('/', async function (req, res) {
   try {
