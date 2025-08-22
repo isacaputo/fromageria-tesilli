@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import {
   Badge,
   Box,
@@ -18,21 +18,21 @@ import {
   Button,
   AppBar,
   Container,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "../helper";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from '../helper';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href={location.origin}>
         Fromageria Tesilli
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -60,29 +60,31 @@ export function Layout({
   return (
     <>
       <AppBar position="static" elevation={0}>
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          
+        <Toolbar sx={{ flexWrap: 'wrap' }}>
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             sx={{ flexGrow: 1, fontSize: 15, letterSpacing: 1 }}
           >
-            <Link href="#"
-              onClick={() => navigate("/")} color="inherit" underline="none">
-            
-            FROMAGERIA TESILLI
+            <Link
+              href="#"
+              onClick={() => navigate('/')}
+              color="inherit"
+              underline="none"
+            >
+              FROMAGERIA
             </Link>
           </Typography>
-          
-          
+
           <nav>
             <Link
               variant="button"
               color="neutral.contrastText"
               sx={{ my: 1, mx: 1.5 }}
               href="#"
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/')}
+              underline="none"
             >
               Home
             </Link>
@@ -91,17 +93,20 @@ export function Layout({
               color="neutral.contrastText"
               sx={{ my: 1, mx: 1.5 }}
               href="#"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate('/products')}
+              underline="none"
             >
               Products
             </Link>
             <Link
-             variant="button"
-             color="neutral.contrastText"
-             sx={{ my: 1, mx: 1.5 }}
-             href="#"
-             onClick={() => navigate("/admin")}>
-           Admin
+              variant="button"
+              color="neutral.contrastText"
+              sx={{ my: 1, mx: 1.5 }}
+              href="#"
+              onClick={() => navigate('/admin')}
+              underline="none"
+            >
+              Admin
             </Link>
             <IconButton aria-label="carrinho" onClick={onOpenCart}>
               <Badge color="secondary" badgeContent={cart.length}>
@@ -111,13 +116,13 @@ export function Layout({
           </nav>
         </Toolbar>
       </AppBar>
-      <Drawer anchor={"right"} open={showCart} onClose={onCloseCart}>
+      <Drawer anchor={'right'} open={showCart} onClose={onCloseCart}>
         <Box sx={{ width: 650, padding: 2 }} role="presentation">
           <List disablePadding>
             {cart.map((product, index) => (
               <ListItem key={index} sx={{ pl: 0, pr: 0 }}>
                 <Card
-                  sx={{ display: "flex", maxHeight: 180, width: "100%" }}
+                  sx={{ display: 'flex', maxHeight: 180, width: '100%' }}
                   variant="outlined"
                 >
                   <CardContent sx={{ flex: 1 }}>
@@ -128,16 +133,16 @@ export function Layout({
                       {product.description}
                     </Typography>
                     <Typography variant="subtitle1" paragraph>
-                      {product.size === 1 ? "Inteiro" : "Metade"}
+                      {product.size === 1 ? 'Inteiro' : 'Metade'}
                     </Typography>
-                    <Box sx={{ display: "flex", gap: "6px" }}>
+                    <Box sx={{ display: 'flex', gap: '6px' }}>
                       <TextField
                         label="Qtd"
                         type="number"
                         inputProps={{ min: 1 }}
                         size="small"
                         value={product.quantity}
-                        sx={{ width: "70px" }}
+                        sx={{ width: '70px' }}
                         onChange={(e) =>
                           onUpdateQuantity(index, e.target.value)
                         }
@@ -153,7 +158,7 @@ export function Layout({
                   </CardContent>
                   <CardMedia
                     component="img"
-                    sx={{ width: 200, display: { xs: "none", sm: "block" } }}
+                    sx={{ width: 200, display: { xs: 'none', sm: 'block' } }}
                     image={product.image}
                     alt={product.name}
                   />
@@ -194,7 +199,7 @@ export function Layout({
       </Drawer>
 
       <Outlet />
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Fromageria Tesilli
         </Typography>
