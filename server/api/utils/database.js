@@ -118,19 +118,6 @@ const initDatabase = async (forceReset = false) => {
       { tableName: 'OrderHasProducts', timestamps: true }
     );
 
-    // Define associations - but avoid the problematic many-to-many for now
-    // We'll handle the relationships manually in queries instead
-    // models.Product.belongsToMany(models.Order, {
-    //   through: models.OrderHasProduct,
-    //   foreignKey: 'product_id',
-    // });
-
-    // models.Order.belongsToMany(models.Product, {
-    //   through: models.OrderHasProduct,
-    //   foreignKey: 'order_id',
-    // });
-
-    // Instead, use simpler belongsTo/hasMany associations
     models.OrderHasProduct.belongsTo(models.Order, {
       foreignKey: 'order_id',
       as: 'Order',
