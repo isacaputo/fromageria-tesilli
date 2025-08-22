@@ -3,9 +3,24 @@
   "builds": [
     {
       "src": "api/**/*.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "memory": 1024,
+        "maxDuration": 30
+      }
     }
   ],
+  "functions": {
+    "api/products/index.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    },
+    "api/test.js": {
+      "memory": 512,
+      "maxDuration": 15
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
