@@ -73,7 +73,11 @@ export function Layout({
               color="inherit"
               underline="none"
             >
-              FROMAGERIA
+              <img
+                src="/images/logo_fromageria.png"
+                alt="Fromageria Logo"
+                width="48"
+              />
             </Link>
           </Typography>
 
@@ -197,7 +201,6 @@ export function Layout({
           </Button>
         </Box>
       </Drawer>
-
       <Outlet />
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
