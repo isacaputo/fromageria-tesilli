@@ -88,8 +88,41 @@ export const api = {
       throw error;
     }
   },
-  getProduct: (id) =>
-    fetch(`${API_BASE_URL}/api/products?id=${id}`).then((res) => res.json()),
+  getProduct: async (id, retryCount = 0) => {
+    const maxRetries = 2;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products?id=${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data || {};
+    } catch (error) {
+      console.error(
+        `API request for product ${id} failed (attempt ${retryCount + 1}):`,
+        error
+      );
+
+      // Retry on failure, especially for cold start issues
+      if (
+        retryCount < maxRetries &&
+        (error.message.includes('500') ||
+          error.message.includes('timeout') ||
+          error.message.includes('network'))
+      ) {
+        console.log(
+          `Retrying product request in ${(retryCount + 1) * 1000}ms...`
+        );
+        await new Promise((resolve) =>
+          setTimeout(resolve, (retryCount + 1) * 1000)
+        );
+        return api.getProduct(id, retryCount + 1);
+      }
+
+      throw error;
+    }
+  },
   createProduct: (data) => axios.post('/api/products/create', data),
   deleteProduct: (id) => axios.delete(`/api/products?id=${id}`),
 
