@@ -35,14 +35,12 @@ const initDatabase = async (forceReset = false) => {
       pool: {
         max: 1, // Use single connection for serverless
         min: 0,
-        acquire: 20000, // Shorter timeout for faster failure
-        idle: 1000, // Very short idle time
-        evict: 1000, // Evict connections quickly
+        acquire: 15000, // Reduce timeout for faster failure
+        idle: 500, // Very short idle time for serverless
       },
       dialectOptions: {
-        connectTimeout: 20000,
-        acquireTimeout: 20000,
-        timeout: 20000,
+        connectTimeout: 15000,
+        acquireTimeout: 15000,
         // Add SSL config if needed
         ssl:
           process.env.NODE_ENV === 'production'
@@ -57,6 +55,8 @@ const initDatabase = async (forceReset = false) => {
           /ECONNREFUSED/,
           /ENOTFOUND/,
           /EAI_AGAIN/,
+          /PROTOCOL_CONNECTION_LOST/,
+          /Connection lost/,
         ],
         max: 2, // Reduce retries for faster failure
       },
@@ -70,7 +70,7 @@ const initDatabase = async (forceReset = false) => {
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Database authentication timeout')),
-            15000
+            10000
           )
         ),
       ]);
@@ -192,13 +192,13 @@ const ensureConnection = async (forceReset = false) => {
   try {
     console.log('Ensuring database connection...');
 
-    // Don't force reset on every request in serverless - let connections persist between requests
-    if (forceReset) {
+    // In serverless environments, always create fresh connections
+    if (process.env.VERCEL || forceReset) {
       resetConnection();
     }
 
-    await checkDatabaseConnection();
-    const { models } = await initDatabase(forceReset);
+    // Always try to create a new connection for serverless
+    const { models } = await initDatabase(true);
 
     const duration = Date.now() - startTime;
     console.log(`Database connection established in ${duration}ms`);

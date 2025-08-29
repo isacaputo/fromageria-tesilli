@@ -26,8 +26,8 @@ module.exports = async (req, res) => {
     // Add timeout wrapper for the entire operation
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(
-        () => reject(new Error('Request timeout after 25 seconds')),
-        25000
+        () => reject(new Error('Request timeout after 20 seconds')),
+        20000
       )
     );
 

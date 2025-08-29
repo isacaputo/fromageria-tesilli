@@ -6,15 +6,15 @@
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "50mb",
-        "memory": 1024,
-        "maxDuration": 30
+        "memory": 512,
+        "maxDuration": 20
       }
     }
   ],
   "functions": {
     "api/products/index.js": {
-      "memory": 1024,
-      "maxDuration": 30
+      "memory": 512,
+      "maxDuration": 20
     },
     "api/test.js": {
       "memory": 512,
